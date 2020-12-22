@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>6efba8a9-a407-4029-bdd0-651d22a87386</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>GDLibrary</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Base\Actor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Base\Actor3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Camera\Camera3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Base\Actor2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\2D\DrawnActor2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\2D\UIButtonObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\2D\UIMouseObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\2D\UITextObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\2D\UITextureObject.cs" />
+    <Compile Include="..\GDLibrary\Core\Actors\Drawn\3D\Collidable\CollidableZoneObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\3D\Collidable\CollidablePickupObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\3D\Collidable\CollidablePrimitiveObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\3D\DrawnActor3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Actors\Drawn\3D\PrimitiveObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Constants\LibraryConstants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Containers\ContentDictionary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Containers\ControllerList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Containers\EventHandlerList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Containers\Pair.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\RotationController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Events\Scheduler\EventScheduler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\Curve3DController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\DriveController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\FirstPersonController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Base\TargetController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Base\UserInputController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Camera\FlightCameraController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\Controller.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\PanController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\RailController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Controllers\3D\Actor\ThirdPersonController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Demos\EventSender.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Demos\Pair.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Demos\PlayerType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Enums\EnumTypes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Events\Handlers\EventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Events\Parameters\EventData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Events\Dispatcher\EventDispatcher_OLD.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Events\Dispatcher\EventDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Factories\VertexFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\GameComponents\PausableDrawableGameComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\GameComponents\PausableGameComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\GDDebug\DebugDrawer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IActor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\ICollisionPrimitive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Input\GamepadManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Menu\MenuScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Render\RenderManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Menu\MenuManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Sound\SoundManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\UI\UIManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Collision\BoxCollisionPrimitive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Collision\SphereCollisionPrimitive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Curve\Curve1D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Curve\Curve2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Curve\Curve3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Curve\Transform2DCurve.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Curve\Transform3DCurve.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Input\ManagerParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Integer2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Rail\RailParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Transform\Transform2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Vertex\BufferedVertexData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\CollisionUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\LevelLoader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\MathUtility.cs" />
+    <Compile Include="..\GDLibrary\Core\Interfaces\I3DDrawable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Interfaces\IVertexData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Camera\CameraManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Input\KeyboardManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Input\MouseManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Managers\Object\ObjectManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Effect\EffectParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Controller\MoveParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Camera\ProjectionParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Transform\Transform3D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Controller\TrigonometricParameters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Parameters\Vertex\VertexData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\CollectionUtility.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Utilities\StringUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Controllers\2D\UI\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Events\Dispatcher\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Events\Parameters\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Managers\Camera\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Managers\Render\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Managers\Physics\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Managers\Object\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Parameters\Camera\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\Parameters\Controller\" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+</Project>
