@@ -18,6 +18,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GDGame
 {
@@ -674,6 +675,40 @@ namespace GDGame
             archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
             #endregion Lit Textured Pyramid
 
+            #region Lit Textured Octahedron
+            /*********** Transform, Vertices and VertexData ***********/
+            //lit pyramid
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedOctahedron(out primitiveType, out primitiveCount);
+
+            //analog of the Model class in G-CA (i.e. it holdes vertices and type, count)
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+
+            /*********** PrimitiveObject ***********/
+            //now we use the "FBX" file (our vertexdata) and make a PrimitiveObject
+            primitiveObject = new PrimitiveObject(
+                GameConstants.Primitive_LitTexturedOctahedron,
+                ActorType.Decorator, //we could specify any time e.g. Pickup
+                StatusType.Drawn,
+                transform3D, effectParameters,
+                vertexData);
+
+            /*********** Controllers (optional) ***********/
+            //we could add controllers to the archetype and then all clones would have cloned controllers
+            //  drawnActor3D.ControllerList.Add(
+            //new RotationController("rot controller1", ControllerType.RotationOverTime,
+            //1, new Vector3(0, 1, 0)));
+
+            //to do...add demos of controllers on archetypes
+            //ensure that the Clone() method of PrimitiveObject will Clone() all controllers
+
+            archetypeDictionary.Add(primitiveObject.ID, primitiveObject); 
+            #endregion
+
             #region Unlit Textured Quad
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                   Vector3.One, Vector3.UnitZ, Vector3.UnitY);
@@ -740,9 +775,9 @@ namespace GDGame
             Transform3D transform3D = new Transform3D(new Vector3(0, 5, 0), Vector3.UnitZ, Vector3.UnitY);
             BoxCollisionPrimitive boxPrim = new BoxCollisionPrimitive(transform3D);
 
-            CollidablePrimitiveObject collPrimObj = new CollidablePrimitiveObject("id",
-                ActorType.CollidableDecorator, StatusType.Drawn, transform3D,
-                effectParameters, vertexData, boxPrim, this.objectManager);
+            //CollidablePrimitiveObject collPrimObj = new CollidablePrimitiveObject("id",
+            //    ActorType.CollidableDecorator, StatusType.Drawn, transform3D,
+            //    effectParameters, vertexData, boxPrim, this.objectManager);
 
             /************ Level-loader (can be collidable or non-collidable) ************/
 
@@ -800,6 +835,13 @@ namespace GDGame
             //   2, new Vector3(1, 0, 0)));
 
             //finally add it into the objectmanager after SIX(!) steps
+            objectManager.Add(drawnActor3D);
+
+
+            drawnActor3D = archetypeDictionary[GameConstants.Primitive_LitTexturedOctahedron].Clone() as PrimitiveObject;
+            Debug.WriteLine(drawnActor3D);
+            drawnActor3D.Transform3D.Scale = 10 * new Vector3(1, 1, 1);
+            drawnActor3D.Transform3D.Translation = new Vector3(10, 8, 0);
             objectManager.Add(drawnActor3D);
         }
 

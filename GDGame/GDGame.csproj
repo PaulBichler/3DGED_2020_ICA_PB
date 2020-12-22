@@ -26,5 +26,8 @@
 	<ItemGroup>
 		<MonoGameContentReference Include="Content\Content.mgcb" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="MyGame\Factories\" />
+	</ItemGroup>
 	<Import Project="..\GDLibrary\GDLibrary.projitems" Label="Shared" />
 </Project>

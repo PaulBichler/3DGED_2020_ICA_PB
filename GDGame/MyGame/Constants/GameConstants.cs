@@ -17,6 +17,7 @@ namespace GDGame
         public static readonly string Primitive_UnlitTexturedQuad = "unlit textured quad";
         public static readonly string Primitive_LitTexturedQuad = "lit textured quad";
         public static readonly string Primitive_LitTexturedPyramid = "lit textured pyramid";
+        public static readonly string Primitive_LitTexturedOctahedron = "lit textured octahedron";
 
         public static readonly string Effect_UnlitTextured = "unlit textured";
         public static readonly string Effect_LitTextured = "lit textured";
