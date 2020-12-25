@@ -39,6 +39,7 @@ namespace GDGame
         private MyMenuManager menuManager;
         private SoundManager soundManager;
         private TweeningManager tweeningManager;
+        private TimeManager timeManager;
 
         //used to process and deliver events received from publishers
         private EventDispatcher eventDispatcher;
@@ -538,6 +539,10 @@ namespace GDGame
             //Tweening
             tweeningManager = new TweeningManager(this, StatusType.Update);
             Components.Add(tweeningManager);
+
+            //Time Manager (provides timed callbacks)
+            timeManager = new TimeManager(this, StatusType.Update);
+            Components.Add(timeManager);
         }
 
         private void InitCameras3D()
@@ -747,13 +752,13 @@ namespace GDGame
             archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
             #endregion
 
-            #region Lit Textured Test
+            #region Lit Textured Spiked Cube
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                 Vector3.One, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["checkerboard"], Color.White, 1);
 
-            vertices = VertexFactory.GetVerticesPositionNormalTexturedTest(out primitiveType, out primitiveCount);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedSpikedCube(out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             primitiveObject = new PrimitiveObject(
                 GameConstants.Primitive_LitTexturedTest,
@@ -832,6 +837,37 @@ namespace GDGame
                 StatusType.Drawn,
                 transform3D, effectParameters,
                 vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region ObstacleSpawner
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            primitiveObject = new PrimitiveObject(
+                "Obstacle Spawner",
+                ActorType.MovingObstacleSpawner, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData
+                );
+            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
+            #endregion
+
+            #region Obstacle
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                "Obstacle",
+                ActorType.Obstacle, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData,
+                new BoxCollisionPrimitive(transform3D), objectManager
+            );
             archetypeDictionary.Add(collidable.ID, collidable); 
             #endregion
         }

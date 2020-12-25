@@ -147,6 +147,13 @@ namespace GDLibrary.Actors
             }
         }
 
-        //to do...
+        public new object Clone()
+        {
+            CollidablePrimitiveObject primitive = new CollidablePrimitiveObject(ID, ActorType, StatusType, Transform3D, EffectParameters, IVertexData,
+                CollisionPrimitive, ObjectManager);
+
+            primitive.ControllerList.AddRange(GetControllerListClone());
+            return primitive;
+        }
     }
 }

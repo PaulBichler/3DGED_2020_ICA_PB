@@ -73,7 +73,7 @@ namespace GDLibrary
             base.Update(gameTime);
         }
 
-        private void MovementCallback()
+        private void MovementCallback(Actor3D actor)
         {
             moveDir = Vector3.Zero;
             isMoving = false;
@@ -83,7 +83,6 @@ namespace GDLibrary
         {
             if (keyboardManager.IsKeyDown(moveKeys[0])) //Forward
             {
-                System.Diagnostics.Debug.WriteLine("forward");
                 //Transform3D.TranslateIncrement
                 //    = Transform3D.Look * gameTime.ElapsedGameTime.Milliseconds
                 //            * moveSpeed;

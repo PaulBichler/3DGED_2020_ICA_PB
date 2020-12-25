@@ -889,7 +889,7 @@ namespace GDLibrary.Factories
             return vertices;
         }
 
-        public static VertexPositionNormalTexture[] GetVerticesPositionNormalTexturedTest(out PrimitiveType primitiveType, out int primitiveCount)
+        public static VertexPositionNormalTexture[] GetVerticesPositionNormalTexturedSpikedCube(out PrimitiveType primitiveType, out int primitiveCount)
         {
             primitiveType = PrimitiveType.TriangleList; //triangles will be separate
             primitiveCount = 24; //4x top pyramid sides, 4x bottom pyramid sides

@@ -31,6 +31,9 @@
         PC,    //hero
         Decorator, //architecture, obstacle
         Projectile,
+        MovingObstacleSpawner,
+        Obstacle,
+        DeathZone,
 
         Camera2D,
         Camera3D,
@@ -89,7 +92,9 @@
         ColorLerpOverTime,
         MouseOver,
         Progress,
-        ScaleLerpOverTime
+        ScaleLerpOverTime,
+
+        ObstacleSpawner
     }
 
     /// <summary>

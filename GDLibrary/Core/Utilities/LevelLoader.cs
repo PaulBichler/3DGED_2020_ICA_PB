@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using GDGame;
+using GDGame.MyGame.Controllers;
+using GDGame.MyGame.Managers;
+using GDLibrary.Enums;
 
 namespace GDLibrary.Utilities
 {
@@ -58,7 +61,7 @@ namespace GDLibrary.Utilities
                         //the offset allows us to shift the whole set of objects in X, Y, and Z
                         translation += offset;
 
-                        actor = getObjectFromColor(color, translation);
+                        actor = getObjectFromColor(color, translation, texture);
 
                         if (actor != null)
                         {
@@ -74,7 +77,7 @@ namespace GDLibrary.Utilities
 
         private int count = 1;
 
-        private DrawnActor3D getObjectFromColor(Color color, Vector3 translation)
+        private DrawnActor3D getObjectFromColor(Color color, Vector3 translation, Texture2D texture)
         {
             //if the pixel is red then draw a tall (stretched collidable unlit cube)
             if (color.Equals(new Color(255, 0, 0)))
@@ -124,9 +127,30 @@ namespace GDLibrary.Utilities
 
                 drawnActor3D.ID = "Road " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
-                drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
+                drawnActor3D.Transform3D.RotationInDegrees = Vector3.Zero;
                 return drawnActor3D;
             }
+
+            if (color.Equals(new Color(255, 255, 0)))
+            {
+                //Obstacle Spawner
+                PrimitiveObject archetype = archetypeDictionary["Obstacle Spawner"] as PrimitiveObject;
+                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+
+                drawnActor3D.ID = "Obstacle Spawner " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+                drawnActor3D.Transform3D.RotationInDegrees = Vector3.Zero;
+                ObstacleSpawnController test = new ObstacleSpawnController(
+                    "Obstacle Spawn Controller", ControllerType.ObstacleSpawner,
+                    archetypeDictionary["Obstacle"] as CollidablePrimitiveObject, 
+                    Vector3.UnitX, texture.Width);
+
+                drawnActor3D.ControllerList.Add(test);
+
+                TimeManager.ExecuteInSeconds("test " + count, 3f, () => test.SpawnObstacle());
+                return drawnActor3D;
+            }
+
             //add an else if for each type of object that you want to load...
 
             return null;

@@ -18,12 +18,12 @@ namespace GDGame.MyGame.Managers
         public EasingType easingType;
         public LoopType loopType;
         public bool relative;
-        public Action callback;
+        public Action<Actor3D> callback;
 
         private Vector3 origin;
         private int currentTimeInMs;
 
-        public Tweener(Actor3D actor, int timeInMs, Vector3 destination, bool relative, Action callback = null, LoopType loopType = LoopType.PlayOnce, EasingType easingType = EasingType.linear)
+        public Tweener(Actor3D actor, int timeInMs, Vector3 destination, bool relative, Action<Actor3D> callback = null, LoopType loopType = LoopType.PlayOnce, EasingType easingType = EasingType.linear)
         {
             this.actor = actor;
             this.timeInMs = timeInMs;
@@ -49,14 +49,12 @@ namespace GDGame.MyGame.Managers
 
             if (currentTimeInMs <= 0)
             {
-                System.Diagnostics.Debug.WriteLine("tween done!");
-                //actor.Transform3D.Translation = destination;
+                actor.Transform3D.Translation = destination;
 
                 switch (loopType)
                 {
                     case LoopType.PlayOnce:
-                        System.Diagnostics.Debug.WriteLine("callback");
-                        callback.Invoke();
+                        callback.Invoke(actor);
                         return true;
                 }
             }
@@ -84,14 +82,12 @@ namespace GDGame.MyGame.Managers
 
         private void RemoveActorTween(Actor3D actor)
         {
-            System.Diagnostics.Debug.WriteLine("tween remove!");
             if(tweens.ContainsKey(actor.ID))
                 tweensToRemove.Add(actor.ID);
         }
 
         private void AddTween(Tweener tweener)
         {
-            System.Diagnostics.Debug.WriteLine("tween add!");
             if(tweener != null)
                 tweensToAdd.Add(tweener);
         }
