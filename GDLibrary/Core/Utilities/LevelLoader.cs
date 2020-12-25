@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using GDGame;
 
 namespace GDLibrary.Utilities
 {
@@ -78,27 +79,53 @@ namespace GDLibrary.Utilities
             //if the pixel is red then draw a tall (stretched collidable unlit cube)
             if (color.Equals(new Color(255, 0, 0)))
             {
-                PrimitiveObject archetype
-                        = archetypeDictionary["lit textured pyramid"] as PrimitiveObject;
-
-                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
-
-                //   PrimitiveObject drawnActor3D
-                //       = archetypeDictionary["lit textured pyramid"].Clone() as PrimitiveObject;
+                System.Diagnostics.Debug.WriteLine(archetypeDictionary[GameConstants.Player].GetType());
+                CollidablePlayerObject archetype = archetypeDictionary[GameConstants.Player] as CollidablePlayerObject;
+                CollidablePlayerObject drawnActor3D = archetype.Clone() as CollidablePlayerObject;
 
                 //change it a bit
-                drawnActor3D.ID = "pyramid " + count++;
-                drawnActor3D.Transform3D.Scale = 10 * new Vector3(3, 4, 1);
-                drawnActor3D.EffectParameters.DiffuseColor = Color.Blue;
-                drawnActor3D.EffectParameters.Alpha = 0.5f;
+                drawnActor3D.ID = "Player " + count++;
+                //drawnActor3D.EffectParameters.DiffuseColor = Color.Blue;
+                //drawnActor3D.EffectParameters.Alpha = 0.5f;
                 drawnActor3D.Transform3D.Translation = translation;
                 drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
                 return drawnActor3D;
             }
-            else if (color.Equals(new Color(0, 0, 255)))
+            
+            if (color.Equals(new Color(0, 0, 255)))
             {
-                //enemy instance
-                return null;
+                //Water
+                PrimitiveObject archetype = archetypeDictionary[GameConstants.Water] as PrimitiveObject;
+                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+
+                drawnActor3D.ID = "Water " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+                drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
+                return drawnActor3D;
+            }
+            
+            if (color.Equals(new Color(0, 255, 0)))
+            {
+                //Grass
+                PrimitiveObject archetype = archetypeDictionary[GameConstants.Grass] as PrimitiveObject;
+                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+
+                drawnActor3D.ID = "Grass " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+                drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
+                return drawnActor3D;
+            }
+
+            if (color.Equals(new Color(0, 0, 0)))
+            {
+                //Road
+                PrimitiveObject archetype = archetypeDictionary[GameConstants.Road] as PrimitiveObject;
+                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+
+                drawnActor3D.ID = "Road " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+                drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
+                return drawnActor3D;
             }
             //add an else if for each type of object that you want to load...
 

@@ -30,6 +30,7 @@
         NPC,    //enemy
         PC,    //hero
         Decorator, //architecture, obstacle
+        Projectile,
 
         Camera2D,
         Camera3D,
@@ -119,8 +120,10 @@
         Object,
         Opacity,
         UIPicking,
-        Scheduler
+        Scheduler,
         //add more here...
+
+        Tween
     }
 
     /// <summary>

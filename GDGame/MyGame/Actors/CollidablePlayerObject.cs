@@ -1,4 +1,6 @@
-﻿using GDLibrary.Actors;
+﻿using GDGame.MyGame.Enums;
+using GDGame.MyGame.Managers;
+using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
 using GDLibrary.Interfaces;
@@ -18,6 +20,9 @@ namespace GDLibrary
         private float moveSpeed, rotationSpeed;
         private KeyboardManager keyboardManager;
         private Keys[] moveKeys;
+
+        private bool isMoving;
+        private Vector3 moveDir;
         #endregion Fields
 
         public CollidablePlayerObject(string id, ActorType actorType, StatusType statusType, Transform3D transform,
@@ -49,35 +54,59 @@ namespace GDLibrary
             //below when we hit against a zone
             if (Collidee == null)
             {
-                ApplyInput(gameTime);
+                if (!isMoving && moveDir != Vector3.Zero)
+                {
+                    EventDispatcher.Publish(new EventData
+                    (
+                        EventCategoryType.Tween,
+                        EventActionType.OnAdd,
+                        null, null,
+                        new object[] {new Tweener(this, 300, moveDir, true, MovementCallback, LoopType.PlayOnce, EasingType.easeOut)}
+                    ));
+                    isMoving = true;
+                }
+
+                //ApplyInput(gameTime);
             }
 
             //reset translate and rotate and update primitive
             base.Update(gameTime);
         }
 
+        private void MovementCallback()
+        {
+            moveDir = Vector3.Zero;
+            isMoving = false;
+        }
+
         protected override void HandleInput(GameTime gameTime)
         {
             if (keyboardManager.IsKeyDown(moveKeys[0])) //Forward
             {
-                Transform3D.TranslateIncrement
-                    = Transform3D.Look * gameTime.ElapsedGameTime.Milliseconds
-                            * moveSpeed;
+                System.Diagnostics.Debug.WriteLine("forward");
+                //Transform3D.TranslateIncrement
+                //    = Transform3D.Look * gameTime.ElapsedGameTime.Milliseconds
+                //            * moveSpeed;
+                Transform3D.TranslateIncrement = moveDir = -Vector3.UnitZ;
             }
             else if (keyboardManager.IsKeyDown(moveKeys[1])) //Backward
             {
-                Transform3D.TranslateIncrement
-                   = -Transform3D.Look * gameTime.ElapsedGameTime.Milliseconds
-                           * moveSpeed;
+                //Transform3D.TranslateIncrement
+                //   = -Transform3D.Look * gameTime.ElapsedGameTime.Milliseconds
+                //           * moveSpeed;
+
+                Transform3D.TranslateIncrement = moveDir = Vector3.UnitZ;
             }
 
             if (keyboardManager.IsKeyDown(moveKeys[2])) //Left
             {
-                Transform3D.RotateIncrement = gameTime.ElapsedGameTime.Milliseconds * rotationSpeed;
+                //Transform3D.RotateIncrement = gameTime.ElapsedGameTime.Milliseconds * rotationSpeed;
+                Transform3D.TranslateIncrement = moveDir = -Vector3.UnitX;
             }
             else if (keyboardManager.IsKeyDown(moveKeys[3])) //Right
             {
-                Transform3D.RotateIncrement = -gameTime.ElapsedGameTime.Milliseconds * rotationSpeed;
+                //Transform3D.RotateIncrement = -gameTime.ElapsedGameTime.Milliseconds * rotationSpeed;
+                Transform3D.TranslateIncrement = moveDir = Vector3.UnitX;
             }
         }
 
@@ -116,6 +145,15 @@ namespace GDLibrary
                     (collidee as DrawnActor3D).EffectParameters.DiffuseColor = Color.Blue;
                 }
             }
+        }
+
+        public new object Clone()
+        {
+            CollidablePlayerObject player = new CollidablePlayerObject(ID, ActorType, StatusType, Transform3D, EffectParameters, IVertexData,
+                CollisionPrimitive, ObjectManager, moveKeys, moveSpeed, rotationSpeed, keyboardManager);
+
+            player.ControllerList.AddRange(GetControllerListClone());
+            return player;
         }
     }
 }

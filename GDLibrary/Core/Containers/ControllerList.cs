@@ -13,10 +13,10 @@ namespace GDLibrary.Containers
     {
         #region Constructors & Core
 
-        public void AddRange(List<IController> startList)
-        {
-            this.AddRange(startList);
-        }
+        //public void AddRange(List<IController> startList)
+        //{
+        //    AddRange(startList);
+        //}
 
         public virtual bool Remove(Predicate<IController> predicate)
         {

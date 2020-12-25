@@ -18,6 +18,11 @@ namespace GDGame
         public static readonly string Primitive_LitTexturedQuad = "lit textured quad";
         public static readonly string Primitive_LitTexturedPyramid = "lit textured pyramid";
         public static readonly string Primitive_LitTexturedOctahedron = "lit textured octahedron";
+        public static readonly string Primitive_LitTexturedTest = "lit textured test";
+        public static readonly string Player = "Player";
+        public static readonly string Water = "Water";
+        public static readonly string Road = "Road";
+        public static readonly string Grass = "Grass";
 
         public static readonly string Effect_UnlitTextured = "unlit textured";
         public static readonly string Effect_LitTextured = "lit textured";
@@ -83,5 +88,7 @@ namespace GDGame
         public static readonly float carRotateSpeed = 0.06f;
 
         #endregion Car
+
+        public static readonly float Projectile_Cooldown = 1.5f;
     }
 }

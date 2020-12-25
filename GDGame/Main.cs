@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GDLibrary;
 
 namespace GDGame
 {
@@ -37,6 +38,7 @@ namespace GDGame
         private UIManager uiManager;
         private MyMenuManager menuManager;
         private SoundManager soundManager;
+        private TweeningManager tweeningManager;
 
         //used to process and deliver events received from publishers
         private EventDispatcher eventDispatcher;
@@ -145,6 +147,8 @@ namespace GDGame
             //level 1 where each image 1_1, 1_2 is a different Y-axis height specificied when we use the level loader
             textureDictionary.Load("Assets/Textures/Level/level1_1");
             textureDictionary.Load("Assets/Textures/Level/level1_2");
+            textureDictionary.Load("Assets/Textures/Level/level_1");
+            textureDictionary.Load("Assets/Textures/Level/level_1_2");
             //add more levels here...
 
             //sky
@@ -176,6 +180,9 @@ namespace GDGame
             textureDictionary.Load("Assets/Textures/UI/Controls/reticuleDefault");
 
             //add more...
+            textureDictionary.Load("Assets/Textures/GameObjects/Grass");
+            textureDictionary.Load("Assets/Textures/GameObjects/Water");
+            textureDictionary.Load("Assets/Textures/GameObjects/Road");
         }
 
         private void LoadFonts()
@@ -191,7 +198,7 @@ namespace GDGame
 
         protected override void Initialize()
         {
-            float worldScale = 2000;
+            float worldScale = 1;
             //set game title
             Window.Title = "My Amazing Game";
 
@@ -527,6 +534,10 @@ namespace GDGame
             //sound
             soundManager = new SoundManager(this, StatusType.Update);
             Components.Add(soundManager);
+
+            //Tweening
+            tweeningManager = new TweeningManager(this, StatusType.Update);
+            Components.Add(tweeningManager);
         }
 
         private void InitCameras3D()
@@ -675,40 +686,6 @@ namespace GDGame
             archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
             #endregion Lit Textured Pyramid
 
-            #region Lit Textured Octahedron
-            /*********** Transform, Vertices and VertexData ***********/
-            //lit pyramid
-            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
-            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
-
-            vertices = VertexFactory.GetVerticesPositionNormalTexturedOctahedron(out primitiveType, out primitiveCount);
-
-            //analog of the Model class in G-CA (i.e. it holdes vertices and type, count)
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
-
-            /*********** PrimitiveObject ***********/
-            //now we use the "FBX" file (our vertexdata) and make a PrimitiveObject
-            primitiveObject = new PrimitiveObject(
-                GameConstants.Primitive_LitTexturedOctahedron,
-                ActorType.Decorator, //we could specify any time e.g. Pickup
-                StatusType.Drawn,
-                transform3D, effectParameters,
-                vertexData);
-
-            /*********** Controllers (optional) ***********/
-            //we could add controllers to the archetype and then all clones would have cloned controllers
-            //  drawnActor3D.ControllerList.Add(
-            //new RotationController("rot controller1", ControllerType.RotationOverTime,
-            //1, new Vector3(0, 1, 0)));
-
-            //to do...add demos of controllers on archetypes
-            //ensure that the Clone() method of PrimitiveObject will Clone() all controllers
-
-            archetypeDictionary.Add(primitiveObject.ID, primitiveObject); 
-            #endregion
-
             #region Unlit Textured Quad
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                   Vector3.One, Vector3.UnitZ, Vector3.UnitY);
@@ -750,6 +727,113 @@ namespace GDGame
             #endregion Unlit Origin Helper
 
             //add more archetypes here...
+
+            #region Lit Textured Octahedron
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedOctahedron(out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+
+            primitiveObject = new PrimitiveObject(
+                GameConstants.Primitive_LitTexturedOctahedron,
+                ActorType.Decorator,
+                StatusType.Drawn,
+                transform3D, effectParameters,
+                vertexData);
+
+            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
+            #endregion
+
+            #region Lit Textured Test
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedTest(out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            primitiveObject = new PrimitiveObject(
+                GameConstants.Primitive_LitTexturedTest,
+                ActorType.Decorator, //we could specify any time e.g. Pickup
+                StatusType.Drawn,
+                transform3D, effectParameters,
+                vertexData);
+
+            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
+            #endregion
+
+
+            /*---------------Collidables-------------*/
+
+            CollidablePrimitiveObject collidable;
+
+            #region Player
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            CollidablePlayerObject player = new CollidablePlayerObject(
+                GameConstants.Player,
+                ActorType.PC,
+                StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters,
+                vertexData, new BoxCollisionPrimitive(transform3D), objectManager,
+                new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }, .2f, .2f, keyboardManager);
+            archetypeDictionary.Add(player.ID, player);
+            #endregion
+
+            #region Grass Tile
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["Grass"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                GameConstants.Grass,
+                ActorType.Decorator,
+                StatusType.Drawn,
+                transform3D, effectParameters,
+                vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region Road Tile
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["Road"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                GameConstants.Road,
+                ActorType.Decorator,
+                StatusType.Drawn,
+                transform3D, effectParameters,
+                vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region Water Tile
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["Water"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                GameConstants.Water,
+                ActorType.Decorator,
+                StatusType.Drawn,
+                transform3D, effectParameters,
+                vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
+            archetypeDictionary.Add(collidable.ID, collidable); 
+            #endregion
         }
 
         private void InitLevel(float worldScale)//, List<string> levelNames)
@@ -787,11 +871,11 @@ namespace GDGame
 
             //add level1_1 contents
             actorList = levelLoader.Load(
-                this.textureDictionary["level1_1"],
-                                10,     //number of in-world x-units represented by 1 pixel in image
-                                10,     //number of in-world z-units represented by 1 pixel in image
-                                20,     //y-axis height offset
-                                new Vector3(-50, 0, -150) //offset to move all new objects by
+                this.textureDictionary["level_1"],
+                                1,     //number of in-world x-units represented by 1 pixel in image
+                                1,     //number of in-world z-units represented by 1 pixel in image
+                                1,     //y-axis height offset
+                                new Vector3(0, 0, 0) //offset to move all new objects by
                                 );
             this.objectManager.Add(actorList);
 
@@ -800,11 +884,11 @@ namespace GDGame
 
             //add level1_2 contents
             actorList = levelLoader.Load(
-             this.textureDictionary["level1_2"],
-                             10,     //number of in-world x-units represented by 1 pixel in image
-                             10,     //number of in-world z-units represented by 1 pixel in image
-                             40,     //y-axis height offset
-                             new Vector3(-50, 0, -150) //offset to move all new objects by
+             this.textureDictionary["level_1_2"],
+                             1,     //number of in-world x-units represented by 1 pixel in image
+                             1,     //number of in-world z-units represented by 1 pixel in image
+                             2,     //y-axis height offset
+                             new Vector3(0, 0, 0) //offset to move all new objects by
                              );
             this.objectManager.Add(actorList);
         }
@@ -839,9 +923,13 @@ namespace GDGame
 
 
             drawnActor3D = archetypeDictionary[GameConstants.Primitive_LitTexturedOctahedron].Clone() as PrimitiveObject;
-            Debug.WriteLine(drawnActor3D);
             drawnActor3D.Transform3D.Scale = 10 * new Vector3(1, 1, 1);
             drawnActor3D.Transform3D.Translation = new Vector3(10, 8, 0);
+            objectManager.Add(drawnActor3D);
+
+            drawnActor3D = archetypeDictionary[GameConstants.Primitive_LitTexturedTest].Clone() as PrimitiveObject;
+            drawnActor3D.Transform3D.Scale = 10 * new Vector3(1, 1, 1);
+            drawnActor3D.Transform3D.Translation = new Vector3(40, 8, 0);
             objectManager.Add(drawnActor3D);
         }
 

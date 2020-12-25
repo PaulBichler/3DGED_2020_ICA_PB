@@ -138,6 +138,7 @@ namespace GDLibrary.Actors
             if (Transform3D.TranslateIncrement != Vector3.Zero)
             {
                 Transform3D.TranslateBy(Transform3D.TranslateIncrement);
+                Transform3D.TranslateIncrement = Vector3.Zero;
             }
 
             if (Transform3D.RotateIncrement != 0)
