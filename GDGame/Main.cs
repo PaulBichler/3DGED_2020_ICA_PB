@@ -787,7 +787,7 @@ namespace GDGame
                 ActorType.PC,
                 StatusType.Drawn | StatusType.Update,
                 transform3D, effectParameters,
-                vertexData, new BoxCollisionPrimitive(transform3D), objectManager,
+                vertexData, new BoxCollisionPrimitive(transform3D, Vector3.One / 2), objectManager,
                 new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }, .2f, .2f, keyboardManager);
             archetypeDictionary.Add(player.ID, player);
             #endregion
@@ -801,8 +801,8 @@ namespace GDGame
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Grass,
-                ActorType.Decorator,
-                StatusType.Drawn,
+                ActorType.GrassTile,
+                StatusType.Drawn | StatusType.Update,
                 transform3D, effectParameters,
                 vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
             archetypeDictionary.Add(collidable.ID, collidable);
@@ -818,7 +818,7 @@ namespace GDGame
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Road,
                 ActorType.Decorator,
-                StatusType.Drawn,
+                StatusType.Drawn | StatusType.Update,
                 transform3D, effectParameters,
                 vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
             archetypeDictionary.Add(collidable.ID, collidable);
@@ -826,15 +826,15 @@ namespace GDGame
 
             #region Water Tile
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+                    new Vector3(1f, 0.5f, 1f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["Water"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Water,
-                ActorType.Decorator,
-                StatusType.Drawn,
+                ActorType.WaterTile,
+                StatusType.Drawn | StatusType.Update,
                 transform3D, effectParameters,
                 vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
             archetypeDictionary.Add(collidable.ID, collidable);
@@ -857,7 +857,7 @@ namespace GDGame
 
             #region Obstacle
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+                    Vector3.One / 2, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["checkerboard"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
@@ -865,6 +865,22 @@ namespace GDGame
             collidable = new CollidablePrimitiveObject(
                 "Obstacle",
                 ActorType.Obstacle, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData,
+                new BoxCollisionPrimitive(transform3D), objectManager
+            );
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region Water Platform
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    new Vector3(.9f, .9f, .9f), Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                "Water Platform",
+                ActorType.WaterPlatform, StatusType.Drawn | StatusType.Update,
                 transform3D, effectParameters, vertexData,
                 new BoxCollisionPrimitive(transform3D), objectManager
             );

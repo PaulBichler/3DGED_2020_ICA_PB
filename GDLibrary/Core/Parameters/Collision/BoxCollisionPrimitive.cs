@@ -1,5 +1,7 @@
-﻿using GDLibrary.Interfaces;
+﻿using System.Collections.Specialized;
+using GDLibrary.Interfaces;
 using Microsoft.Xna.Framework;
+using SharpDX.Direct3D9;
 
 namespace GDLibrary.Parameters
 {
@@ -14,6 +16,7 @@ namespace GDLibrary.Parameters
         #region Variables
         private static Vector3 min = -1 * Vector3.One, max = Vector3.One;
         private BoundingBox boundingBox, originalBoundingBox;
+        private Vector3 scaleFactor;
         private Transform3D transform3D;
         #endregion Variables
 
@@ -34,11 +37,13 @@ namespace GDLibrary.Parameters
         }
         #endregion Properties
 
-        public BoxCollisionPrimitive(Transform3D transform3D)
+        public BoxCollisionPrimitive(Transform3D transform3D, Vector3 scaleFactor = default)
         {
             this.transform3D = transform3D;
-            boundingBox = new BoundingBox(transform3D.Scale / 2 * min, transform3D.Scale / 2 * max);
+            if (scaleFactor == default) scaleFactor = Vector3.One;
+            boundingBox = new BoundingBox(transform3D.Scale * scaleFactor / 2 * min, transform3D.Scale * scaleFactor / 2 * max);
             originalBoundingBox = boundingBox;
+            this.scaleFactor = scaleFactor;
         }
 
         public bool Intersects(BoundingBox box)
@@ -96,7 +101,7 @@ namespace GDLibrary.Parameters
 
         public object Clone()
         {
-            return new BoxCollisionPrimitive((Transform3D)Transform3D.Clone());
+            return new BoxCollisionPrimitive((Transform3D)Transform3D.Clone(), scaleFactor);
         }
     }
 }

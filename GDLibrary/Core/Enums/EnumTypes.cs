@@ -33,6 +33,7 @@
         Projectile,
         MovingObstacleSpawner,
         Obstacle,
+        WaterPlatform,
         DeathZone,
 
         Camera2D,
@@ -43,6 +44,8 @@
         CollidablePickup,
         CollidableDecorator, //architecture
         CollidableCamera,
+        GrassTile,
+        WaterTile,
 
         UITextureObject,
         UIText,
@@ -94,7 +97,8 @@
         Progress,
         ScaleLerpOverTime,
 
-        ObstacleSpawner
+        ObstacleSpawner,
+        WaterPlatformSpawner
     }
 
     /// <summary>

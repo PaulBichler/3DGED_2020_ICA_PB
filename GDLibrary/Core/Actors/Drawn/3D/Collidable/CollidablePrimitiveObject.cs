@@ -1,4 +1,6 @@
-﻿using GDLibrary.Enums;
+﻿using System;
+using System.Collections.Generic;
+using GDLibrary.Enums;
 using GDLibrary.Interfaces;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
@@ -70,6 +72,13 @@ namespace GDLibrary.Actors
             this.objectManager = objectManager;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            //Update the collider
+            collisionPrimitive.Update(gameTime, Transform3D);
+            base.Update(gameTime);
+        }
+
         //read and store movement suggested by keyboard input
         protected virtual void HandleInput(GameTime gameTime)
         {
@@ -131,6 +140,50 @@ namespace GDLibrary.Actors
             return null;
         }
 
+        protected Actor Raycast(Vector3 origin, Vector3 direction, float distance)
+        {
+            Actor raycastCollidee = null;
+            Ray ray = new Ray(origin, direction);
+
+            foreach (IActor actor in objectManager.OpaqueList)
+            {
+                raycastCollidee = CheckRaycastCollision((Actor3D)actor, ray, distance);
+                if (raycastCollidee != null)
+                    return raycastCollidee;
+            }
+
+            foreach (IActor actor in objectManager.TransparentList)
+            {
+                raycastCollidee = CheckRaycastCollision((Actor3D)actor, ray, distance);
+                if (raycastCollidee != null)
+                    return raycastCollidee;
+            }
+
+            return null;
+        }
+
+        private Actor CheckRaycastCollision(Actor3D actor3D, Ray ray, float distance)
+        {
+            //dont test for collision against yourself
+            if (!Equals(actor3D))
+            {
+                if (actor3D is CollidablePrimitiveObject collidableObject)
+                {
+                    if (collidableObject.CollisionPrimitive.Intersects(ray, out float? distanceToObj))
+                        if(distanceToObj <= distance)
+                            return collidableObject;
+                }
+                else if (actor3D is CollidableZoneObject zoneObject)
+                {
+                    if (zoneObject.CollisionPrimitive.Intersects(ray, out float? distanceToObj))
+                        if(distanceToObj <= distance)
+                            return zoneObject;
+                }
+            }
+
+            return null;
+        }
+
         //apply suggested movement since no collision will occur if the player moves to that position
         protected virtual void ApplyInput(GameTime gameTime)
         {
@@ -147,10 +200,23 @@ namespace GDLibrary.Actors
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is CollidablePrimitiveObject @object &&
+                   base.Equals(obj) &&
+                   EqualityComparer<ICollisionPrimitive>.Default.Equals(CollisionPrimitive, @object.CollisionPrimitive);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), CollisionPrimitive);
+        }
+
         public new object Clone()
         {
-            CollidablePrimitiveObject primitive = new CollidablePrimitiveObject(ID, ActorType, StatusType, Transform3D, EffectParameters, IVertexData,
-                CollisionPrimitive, ObjectManager);
+            CollidablePrimitiveObject primitive = new CollidablePrimitiveObject(ID, ActorType, StatusType, Transform3D.Clone() as Transform3D, 
+                EffectParameters.Clone() as EffectParameters, IVertexData.Clone() as IVertexData, CollisionPrimitive.Clone() as ICollisionPrimitive, 
+                ObjectManager);
 
             primitive.ControllerList.AddRange(GetControllerListClone());
             return primitive;

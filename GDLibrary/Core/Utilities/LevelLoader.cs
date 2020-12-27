@@ -61,7 +61,7 @@ namespace GDLibrary.Utilities
                         //the offset allows us to shift the whole set of objects in X, Y, and Z
                         translation += offset;
 
-                        actor = getObjectFromColor(color, translation, texture);
+                        actor = GetObjectFromColor(color, translation, texture, x);
 
                         if (actor != null)
                         {
@@ -77,12 +77,12 @@ namespace GDLibrary.Utilities
 
         private int count = 1;
 
-        private DrawnActor3D getObjectFromColor(Color color, Vector3 translation, Texture2D texture)
+        private DrawnActor3D GetObjectFromColor(Color color, Vector3 translation, Texture2D texture, int x)
         {
             //if the pixel is red then draw a tall (stretched collidable unlit cube)
             if (color.Equals(new Color(255, 0, 0)))
             {
-                System.Diagnostics.Debug.WriteLine(archetypeDictionary[GameConstants.Player].GetType());
+                #region Player
                 CollidablePlayerObject archetype = archetypeDictionary[GameConstants.Player] as CollidablePlayerObject;
                 CollidablePlayerObject drawnActor3D = archetype.Clone() as CollidablePlayerObject;
 
@@ -92,47 +92,54 @@ namespace GDLibrary.Utilities
                 //drawnActor3D.EffectParameters.Alpha = 0.5f;
                 drawnActor3D.Transform3D.Translation = translation;
                 drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
-                return drawnActor3D;
+                return drawnActor3D; 
+                #endregion
             }
             
             if (color.Equals(new Color(0, 0, 255)))
             {
-                //Water
-                PrimitiveObject archetype = archetypeDictionary[GameConstants.Water] as PrimitiveObject;
-                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+                #region Water Tile
+                //Water Tile
+                CollidablePrimitiveObject archetype = archetypeDictionary[GameConstants.Water] as CollidablePrimitiveObject;
+                CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
 
                 drawnActor3D.ID = "Water " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
-                drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
-                return drawnActor3D;
+                return drawnActor3D; 
+                #endregion
             }
             
             if (color.Equals(new Color(0, 255, 0)))
             {
-                //Grass
-                PrimitiveObject archetype = archetypeDictionary[GameConstants.Grass] as PrimitiveObject;
-                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+                #region Grass Tile
+                //Grass Tile
+                CollidablePrimitiveObject archetype = archetypeDictionary[GameConstants.Grass] as CollidablePrimitiveObject;
+                CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
 
                 drawnActor3D.ID = "Grass " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
                 drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
-                return drawnActor3D;
+                return drawnActor3D; 
+                #endregion
             }
 
             if (color.Equals(new Color(0, 0, 0)))
             {
-                //Road
-                PrimitiveObject archetype = archetypeDictionary[GameConstants.Road] as PrimitiveObject;
-                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+                #region Road Tile
+                //Road Tile
+                CollidablePrimitiveObject archetype = archetypeDictionary[GameConstants.Road] as CollidablePrimitiveObject;
+                CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
 
                 drawnActor3D.ID = "Road " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
                 drawnActor3D.Transform3D.RotationInDegrees = Vector3.Zero;
-                return drawnActor3D;
+                return drawnActor3D; 
+                #endregion
             }
 
             if (color.Equals(new Color(255, 255, 0)))
             {
+                #region Obstacle Spawner
                 //Obstacle Spawner
                 PrimitiveObject archetype = archetypeDictionary["Obstacle Spawner"] as PrimitiveObject;
                 PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
@@ -140,15 +147,41 @@ namespace GDLibrary.Utilities
                 drawnActor3D.ID = "Obstacle Spawner " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
                 drawnActor3D.Transform3D.RotationInDegrees = Vector3.Zero;
+
+                Vector3 moveDir = (x < texture.Width / 2) ? Vector3.UnitX : -Vector3.UnitX;
                 ObstacleSpawnController test = new ObstacleSpawnController(
                     "Obstacle Spawn Controller", ControllerType.ObstacleSpawner,
-                    archetypeDictionary["Obstacle"] as CollidablePrimitiveObject, 
-                    Vector3.UnitX, texture.Width);
+                    archetypeDictionary["Obstacle"] as CollidablePrimitiveObject,
+                    moveDir, texture.Width, new Vector3(0, -0.25f, 0));
 
                 drawnActor3D.ControllerList.Add(test);
 
                 TimeManager.ExecuteInSeconds("test " + count, 3f, () => test.SpawnObstacle());
-                return drawnActor3D;
+                return drawnActor3D; 
+                #endregion
+            }
+
+            if (color.Equals(new Color(100, 100, 100)))
+            {
+                #region Water Platform Spawner
+                //Water Platform Spawner
+                PrimitiveObject archetype = archetypeDictionary["Obstacle Spawner"] as PrimitiveObject;
+                PrimitiveObject drawnActor3D = archetype.Clone() as PrimitiveObject;
+
+                drawnActor3D.ID = "Water Platform Spawner " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+
+                Vector3 moveDir = (x < texture.Width / 2) ? Vector3.UnitX : -Vector3.UnitX;
+                ObstacleSpawnController spawnController = new ObstacleSpawnController(
+                    "Water Platform Controller", ControllerType.WaterPlatformSpawner,
+                    archetypeDictionary["Water Platform"] as CollidablePrimitiveObject,
+                    moveDir, texture.Width, new Vector3(0, -0.95f, 0));
+
+                drawnActor3D.ControllerList.Add(spawnController);
+
+                TimeManager.ExecuteInSeconds("test " + count, 3f, () => spawnController.SpawnObstacle());
+                return drawnActor3D; 
+                #endregion
             }
 
             //add an else if for each type of object that you want to load...
