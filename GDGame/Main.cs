@@ -19,7 +19,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GDGame.MyGame.Controllers;
 using GDLibrary;
+using GDLibrary.Core.Managers.State;
 
 namespace GDGame
 {
@@ -38,6 +40,7 @@ namespace GDGame
         private UIManager uiManager;
         private MyMenuManager menuManager;
         private SoundManager soundManager;
+        private MyGameStateManager gameStateManager;
         private TweeningManager tweeningManager;
         private TimeManager timeManager;
 
@@ -536,6 +539,10 @@ namespace GDGame
             soundManager = new SoundManager(this, StatusType.Update);
             Components.Add(soundManager);
 
+            //Game State
+            gameStateManager = new MyGameStateManager(this, StatusType.Update, cameraManager);
+            Components.Add(gameStateManager);
+
             //Tweening
             tweeningManager = new TweeningManager(this, StatusType.Update);
             Components.Add(tweeningManager);
@@ -550,26 +557,6 @@ namespace GDGame
             Transform3D transform3D = null;
             Camera3D camera3D = null;
             Viewport viewPort = new Viewport(0, 0, 1024, 768);
-
-            #region Noncollidable Camera - First Person
-
-            transform3D = new Transform3D(new Vector3(10, 10, 20),
-                new Vector3(0, 0, -1), Vector3.UnitY);
-
-            camera3D = new Camera3D(GameConstants.Camera_NonCollidableFirstPerson,
-                ActorType.Camera3D, StatusType.Update, transform3D,
-                ProjectionParameters.StandardDeepSixteenTen,
-                new Viewport(0, 0, 1024, 768));
-
-            //attach a controller
-            camera3D.ControllerList.Add(new FirstPersonController(
-                GameConstants.Controllers_NonCollidableFirstPerson,
-                ControllerType.FirstPerson,
-                keyboardManager, mouseManager,
-                GameConstants.moveSpeed, GameConstants.strafeSpeed, GameConstants.rotateSpeed));
-            cameraManager.Add(camera3D);
-
-            #endregion Noncollidable Camera - First Person
 
             #region Noncollidable Camera - Flight
 
@@ -592,23 +579,6 @@ namespace GDGame
 
             #endregion Noncollidable Camera - Flight
 
-            #region Noncollidable Camera - Security
-
-            transform3D = new Transform3D(new Vector3(10, 10, 50),
-                        new Vector3(0, 0, -1),
-                        Vector3.UnitY);
-
-            camera3D = new Camera3D(GameConstants.Camera_NonCollidableSecurity,
-                ActorType.Camera3D, StatusType.Update, transform3D,
-            ProjectionParameters.StandardDeepSixteenTen, viewPort);
-
-            camera3D.ControllerList.Add(new PanController(
-                GameConstants.Controllers_NonCollidableSecurity, ControllerType.Pan,
-                new Vector3(1, 1, 0), new TrigonometricParameters(30, GameConstants.mediumAngularSpeed, 0)));
-            cameraManager.Add(camera3D);
-
-            #endregion Noncollidable Camera - Security
-
             #region Noncollidable Camera - Curve3D
 
             //notice that it doesnt matter what translation, look, and up are since curve will set these
@@ -626,6 +596,21 @@ namespace GDGame
             cameraManager.Add(camera3D);
 
             #endregion Noncollidable Camera - Curve3D
+
+            #region Player Follow Camera
+            transform3D = new Transform3D(Vector3.Zero, -Vector3.Forward, Vector3.Up);
+            camera3D = new Camera3D(GameConstants.Camera_PlayerFollowCamera,
+                ActorType.Camera3D, StatusType.Update, transform3D,
+                ProjectionParameters.StandardDeepSixteenTen, viewPort);
+
+            camera3D.ControllerList.Add(new FollowActorController(
+                GameConstants.Controllers_CameraFollowPlayer,
+                ControllerType.FollowCamera,
+                null, GameConstants.PlayerFollowCamera_ElevationAngle, 
+                GameConstants.PlayerFollowCamera_DistanceToPlayer));
+
+            cameraManager.Add(camera3D); 
+            #endregion
 
             cameraManager.ActiveCameraIndex = 0; //0, 1, 2, 3
         }

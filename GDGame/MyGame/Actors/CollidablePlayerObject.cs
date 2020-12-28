@@ -37,6 +37,9 @@ namespace GDLibrary
 
             //for movement
             this.keyboardManager = keyboardManager;
+
+            //Notify the GameStateManager that the player has been spawned (used for the camera)
+            EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnSpawn, new []{ this }));
         }
 
         public override void Update(GameTime gameTime)
@@ -68,8 +71,6 @@ namespace GDLibrary
                     ));
                     isMoving = true;
                 }
-
-                //ApplyInput(gameTime);
             }
 
             //reset translate and rotate and update primitive
@@ -98,7 +99,8 @@ namespace GDLibrary
 
         private void Die()
         {
-            EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, null, null, new object[] { this }));
+            EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnLose, null));
+            EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new object[] { this }));
         }
 
         protected override void HandleInput(GameTime gameTime)
@@ -107,15 +109,10 @@ namespace GDLibrary
                 Transform3D.TranslateIncrement = moveDir = -Vector3.UnitZ;
             else if (keyboardManager.IsKeyDown(moveKeys[1])) //Backward
                 Transform3D.TranslateIncrement = moveDir = Vector3.UnitZ;
-
-            if (keyboardManager.IsKeyDown(moveKeys[2])) //Left
-            {
+            else if (keyboardManager.IsKeyDown(moveKeys[2])) //Left
                 Transform3D.TranslateIncrement = moveDir = -Vector3.UnitX;
-            }
             else if (keyboardManager.IsKeyDown(moveKeys[3])) //Right
-            {
                 Transform3D.TranslateIncrement = moveDir = Vector3.UnitX;
-            }
         }
 
         /********************************************************************************************/

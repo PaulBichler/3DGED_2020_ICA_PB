@@ -78,6 +78,7 @@
     {
         //camera specific
         FlightCamera,
+        FollowCamera,
 
         ThirdPerson,
 
@@ -132,7 +133,8 @@
         Scheduler,
         //add more here...
 
-        Tween
+        Tween,
+        GameState
     }
 
     /// <summary>

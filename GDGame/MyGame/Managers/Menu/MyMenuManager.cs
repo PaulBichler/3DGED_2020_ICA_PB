@@ -68,6 +68,7 @@ namespace GDGame.MyGame.Managers
             {
                 case "play":
                     EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart, null));
                     break;
 
                 case "controls":

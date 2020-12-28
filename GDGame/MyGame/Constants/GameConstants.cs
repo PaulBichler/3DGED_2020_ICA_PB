@@ -32,12 +32,19 @@ namespace GDGame
         public static readonly string Camera_NonCollidableFlight = "Noncollidable Flight";
         public static readonly string Camera_NonCollidableSecurity = "Noncollidable security";
         public static readonly string Camera_NonCollidableCurveMainArena = "Noncollidable curve - main arena";
+        public static readonly string Camera_PlayerFollowCamera = "Player Follow Camera";
 
         public static readonly string Controllers_NonCollidableFirstPerson = "1st person controller A";
         public static readonly string Controllers_NonCollidableFlight = "Flight controller A";
         public static readonly string Controllers_NonCollidableSecurity = "pan controller";
         public static readonly string Controllers_NonCollidableCurveMainArena = "main arena - fly through - 1";
+        public static readonly string Controllers_CameraFollowPlayer = "Camera Follow Player Controller";
         #endregion String IDs
+
+        #region Player Follow Camera
+        public static readonly float PlayerFollowCamera_ElevationAngle = 50f;
+        public static readonly float PlayerFollowCamera_DistanceToPlayer = 15f; 
+        #endregion
 
         #region Collidable First Person Camera
 

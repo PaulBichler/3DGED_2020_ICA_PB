@@ -1,7 +1,10 @@
-﻿using GDLibrary.Enums;
+﻿using GDGame.MyGame.Controllers;
+using GDLibrary.Actors;
+using GDLibrary.Enums;
 using GDLibrary.Events;
 using GDLibrary.GameComponents;
 using GDLibrary.Interfaces;
+using GDLibrary.Managers;
 using Microsoft.Xna.Framework;
 
 namespace GDLibrary.Core.Managers.State
@@ -11,23 +14,57 @@ namespace GDLibrary.Core.Managers.State
     /// </summary>
     public class MyGameStateManager : PausableGameComponent, IEventHandler
     {
-        public MyGameStateManager(Game game, StatusType statusType) : base(game, statusType)
+        private CameraManager<Camera3D> cameraManager;
+        private Actor3D player;
+
+        public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager) : base(game, statusType)
         {
+            this.cameraManager = cameraManager;
         }
 
         public override void SubscribeToEvents()
         {
             //add new events here...
-
+            EventDispatcher.Subscribe(EventCategoryType.GameState, HandleEvent);
             base.SubscribeToEvents();
         }
 
         public override void HandleEvent(EventData eventData)
         {
-            //add new if...else if statements to handle events here...
+            if (eventData.EventCategoryType == EventCategoryType.GameState)
+            {
+                switch (eventData.EventActionType)
+                {
+                    case EventActionType.OnLose:
+                        break;
+                    case EventActionType.OnWin:
+                        break;
+                    case EventActionType.OnStart:
+                        //start curve camera
+                        StartGame();
+                        break;
+                    case EventActionType.OnSpawn:
+                        //get a reference to the player to set the target in the follow camera
+                        player = eventData.Parameters[0] as Actor3D;
+                        break;
+                }
+            }
 
             //remember to pass the eventData down so the parent class can process pause/unpause
             base.HandleEvent(eventData);
+        }
+
+        private void StartGame()
+        {
+
+
+            StartCamera();
+        }
+
+        private void StartCamera()
+        {
+            (cameraManager[2].ControllerList.Find(controller => controller is FollowActorController) as FollowActorController).SetTargetTransform(player.Transform3D);
+            cameraManager.ActiveCameraIndex = 2;
         }
 
         protected override void ApplyUpdate(GameTime gameTime)

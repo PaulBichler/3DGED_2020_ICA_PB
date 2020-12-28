@@ -147,14 +147,14 @@ namespace GDLibrary.Actors
 
             foreach (IActor actor in objectManager.OpaqueList)
             {
-                raycastCollidee = CheckRaycastCollision((Actor3D)actor, ray, distance);
+                raycastCollidee = CheckRayCollision((Actor3D)actor, ray, distance);
                 if (raycastCollidee != null)
                     return raycastCollidee;
             }
 
             foreach (IActor actor in objectManager.TransparentList)
             {
-                raycastCollidee = CheckRaycastCollision((Actor3D)actor, ray, distance);
+                raycastCollidee = CheckRayCollision((Actor3D)actor, ray, distance);
                 if (raycastCollidee != null)
                     return raycastCollidee;
             }
@@ -162,7 +162,7 @@ namespace GDLibrary.Actors
             return null;
         }
 
-        private Actor CheckRaycastCollision(Actor3D actor3D, Ray ray, float distance)
+        private Actor CheckRayCollision(Actor3D actor3D, Ray ray, float distance)
         {
             //dont test for collision against yourself
             if (!Equals(actor3D))
