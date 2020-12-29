@@ -23,6 +23,7 @@ namespace GDLibrary
 
         private bool isMoving;
         private Vector3 moveDir;
+        private Actor ground;
         #endregion Fields
 
         public CollidablePlayerObject(string id, ActorType actorType, StatusType statusType, Transform3D transform,
@@ -44,6 +45,9 @@ namespace GDLibrary
 
         public override void Update(GameTime gameTime)
         {
+            //reset translate and rotate and update primitive
+            base.Update(gameTime);
+
             //read any input and store suggested increments
             HandleInput(gameTime);
 
@@ -61,10 +65,7 @@ namespace GDLibrary
                 {
                     EventDispatcher.Publish(new EventData
                     (
-                        EventCategoryType.Tween,
-                        EventActionType.OnAdd,
-                        null, null,
-                        new object[]
+                        EventCategoryType.Tween, EventActionType.OnAdd, new object[]
                         {
                             new Tweener(this, 300, moveDir, true, MovementCallback, LoopType.PlayOnce, EasingType.easeOut)
                         }
@@ -72,9 +73,6 @@ namespace GDLibrary
                     isMoving = true;
                 }
             }
-
-            //reset translate and rotate and update primitive
-            base.Update(gameTime);
         }
 
         private void MovementCallback(Actor3D actor)
@@ -84,17 +82,38 @@ namespace GDLibrary
             CheckGround();
         }
 
+        /// <summary>
+        /// Checks what tile is directly underneath the player and performs an action based on it.
+        /// This is called directly after the player's move has finished.
+        /// </summary>
         private void CheckGround()
         {
-            Actor ground = Raycast(Transform3D.Translation, -Vector3.UnitY, 1f);
-            if (ground == null) return;
-
-            if (ground.ActorType == ActorType.WaterTile)
-                Die();
-            else if (ground.ActorType == ActorType.WaterPlatform)
+            Actor newGround = Raycast(Transform3D.Translation, -Vector3.UnitY, 1f);
+            if (newGround == null)
             {
-                //TODO: Move with water platform
+                //No ground detected --> player dies (Water tiles have no collision, so water will kill the player too)
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []
+                {
+                    new Tweener(this, 200, new Vector3(0, -2, 0), 
+                        true, actor3D => Die()) 
+                }));
+                return;
             }
+
+            //Detach from the last water platform
+            if(ground != null && ground.ActorType == ActorType.WaterPlatform)
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new [] {ground as Actor3D, this}));
+
+            //Attach to a new water platform
+            if (newGround.ActorType == ActorType.WaterPlatform)
+            {
+                Vector3 platformTrans = (newGround as Actor3D).Transform3D.Translation;
+                Transform3D.Translation = new Vector3(platformTrans.X, Transform3D.Translation.Y, platformTrans.Z);
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {newGround as Actor3D, this}));
+            }
+
+            //Update the ground
+            ground = newGround;
         }
 
         private void Die()
@@ -153,11 +172,6 @@ namespace GDLibrary
                     //remove the object
                     object[] parameters = { collidee };
                     EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, parameters));
-                }
-                //the boxes on the right that move up and down
-                else if (collidee.ActorType == ActorType.CollidableDecorator)
-                {
-                    (collidee as DrawnActor3D).EffectParameters.DiffuseColor = Color.Blue;
                 }
             }
         }

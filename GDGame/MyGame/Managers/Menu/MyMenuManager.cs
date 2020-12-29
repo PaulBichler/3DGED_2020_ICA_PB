@@ -34,11 +34,13 @@ namespace GDGame.MyGame.Managers
                         break;
                     case EventActionType.OnLose:
                         SetScene("lose");
-                        SetMenuVisibility(true);
+                        //sending new event since other managers are also handling pause
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
                         break;
                     case EventActionType.OnWin:
                         SetScene("win");
-                        SetMenuVisibility(true);
+                        //sending new event since other managers are also handling pause
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
                         break;
                 }
             }

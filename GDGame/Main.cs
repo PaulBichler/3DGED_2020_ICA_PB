@@ -840,7 +840,7 @@ namespace GDGame
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Water,
                 ActorType.WaterTile,
-                StatusType.Drawn | StatusType.Update,
+                StatusType.Drawn,
                 transform3D, effectParameters,
                 vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
             archetypeDictionary.Add(collidable.ID, collidable);

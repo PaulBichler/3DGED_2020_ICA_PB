@@ -210,5 +210,8 @@
         OnApplyActionToAllActors,
 
         //add more here...
+
+        OnAddChild,
+        OnRemoveChild
     }
 }

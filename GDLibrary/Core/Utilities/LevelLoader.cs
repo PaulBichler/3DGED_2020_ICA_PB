@@ -175,7 +175,7 @@ namespace GDLibrary.Utilities
                 ObstacleSpawnController spawnController = new ObstacleSpawnController(
                     "Water Platform Controller", ControllerType.WaterPlatformSpawner,
                     archetypeDictionary["Water Platform"] as CollidablePrimitiveObject,
-                    moveDir, texture.Width, new Vector3(0, -0.95f, 0));
+                    moveDir, texture.Width, new Vector3(0, -1f, 0));
 
                 drawnActor3D.ControllerList.Add(spawnController);
 

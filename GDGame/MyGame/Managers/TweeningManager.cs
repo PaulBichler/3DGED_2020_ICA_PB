@@ -21,7 +21,9 @@ namespace GDGame.MyGame.Managers
         public readonly bool Relative;
         public readonly Action<Actor3D> Callback;
 
+        private List<Actor3D> childActors;
         private Vector3 origin;
+        private Vector3 previous;
         private int currentTimeInMs;
 
         public Tweener(Actor3D actor, int timeInMs, Vector3 destination, bool relative, Action<Actor3D> callback = null, LoopType loopType = LoopType.PlayOnce, EasingType easingType = EasingType.linear)
@@ -34,7 +36,8 @@ namespace GDGame.MyGame.Managers
             Relative = relative;
             Callback = callback;
 
-            origin = actor.Transform3D.Translation;
+            childActors = new List<Actor3D>();
+            origin = previous = actor.Transform3D.Translation;
             currentTimeInMs = timeInMs;
 
             if (relative)
@@ -50,7 +53,7 @@ namespace GDGame.MyGame.Managers
 
             if (currentTimeInMs <= 0)
             {
-                Actor.Transform3D.Translation = Destination;
+                Actor.Transform3D.TranslateBy(Destination - previous);
 
                 switch (LoopType)
                 {
@@ -62,9 +65,26 @@ namespace GDGame.MyGame.Managers
 
             float x = 1f - (float)currentTimeInMs / TimeInMs;
             float easedValue = Easer.ApplyEasing(x, EasingType);
-            Actor.Transform3D.Translation = Vector3.Lerp(origin, Destination, easedValue);
+            Vector3 next = Vector3.Lerp(origin, Destination, easedValue);
+            Vector3 translationToApply = next - previous;
+            previous = next;
+
+            //Translate the actor(s)
+            Actor.Transform3D.TranslateBy(translationToApply);
+            foreach (var childActor in childActors)
+                childActor.Transform3D.TranslateBy(translationToApply);
 
             return false;
+        }
+
+        public void AddChild(Actor3D child)
+        {
+            childActors.Add(child);
+        }
+
+        public void RemoveChild(Actor3D child)
+        {
+            childActors.Remove(child);
         }
 
         public override int GetHashCode()
@@ -102,6 +122,17 @@ namespace GDGame.MyGame.Managers
             foreach (Tweener tween in tweens)
                 if(tween.Actor.Equals(actor))
                     tweensToRemove.Add(tween);
+        }
+
+        private List<T> GetActorTweens<T>(Actor3D actor)
+        {
+            List<T> tweens = new List<T>();
+
+            foreach (Tweener tween in this.tweens)
+                if(tween.Actor.Equals(actor) && tween is T target)
+                    tweens.Add(target);
+
+            return tweens;
         }
 
         private void AddTween(Tweener tweener)
@@ -150,6 +181,11 @@ namespace GDGame.MyGame.Managers
                 {
                     case EventActionType.OnAdd:
                         AddTween(eventData.Parameters[0] as Tweener);
+                        break;
+                    case EventActionType.OnAddChild:
+                        List<Tweener> tweensFound = GetActorTweens<Tweener>(eventData.Parameters[0] as Actor3D);
+                        foreach (var tween in tweensFound)
+                            tween.AddChild(eventData.Parameters[1] as Actor3D);
                         break;
                     case EventActionType.OnRemoveActor:
                         RemoveActorTweens(eventData.Parameters[0] as Actor3D);
