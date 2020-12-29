@@ -135,7 +135,7 @@ namespace GDLibrary
                 //IMPORTANT - setting this to null means that the ApplyInput() method will get called and the player can move through the zone.
                 Collidee = null;
             }
-            else if (collidee is CollidablePrimitiveObject)
+            else if (collidee is CollidablePrimitiveObject obstacle)
             {
                 if (collidee.ActorType == ActorType.Obstacle)
                 {
@@ -143,7 +143,10 @@ namespace GDLibrary
                     System.Diagnostics.Debug.WriteLine(Transform3D.Translation);
                     System.Diagnostics.Debug.WriteLine((collidee as CollidablePrimitiveObject).CollisionPrimitive);
                     System.Diagnostics.Debug.WriteLine((collidee as CollidablePrimitiveObject).Transform3D.Translation);
-                    Die();
+
+                    //Distance check to prevent collision issues
+                    if(Vector3.Distance(obstacle.Transform3D.Translation, Transform3D.Translation) <= 1f)
+                        Die();
                 }
                 else if (collidee.ActorType == ActorType.CollidablePickup)
                 {

@@ -36,8 +36,10 @@ namespace GDLibrary.Core.Managers.State
                 switch (eventData.EventActionType)
                 {
                     case EventActionType.OnLose:
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnLose, null));
                         break;
                     case EventActionType.OnWin:
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnWin, null));
                         break;
                     case EventActionType.OnStart:
                         //start curve camera
@@ -63,7 +65,7 @@ namespace GDLibrary.Core.Managers.State
 
         private void StartCamera()
         {
-            (cameraManager[2].ControllerList.Find(controller => controller is FollowActorController) as FollowActorController).SetTargetTransform(player.Transform3D);
+            (cameraManager[2].ControllerList.Find(controller => controller is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
             cameraManager.ActiveCameraIndex = 2;
         }
 

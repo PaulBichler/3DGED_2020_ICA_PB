@@ -24,11 +24,32 @@ namespace GDGame.MyGame.Managers
         {
             if (eventData.EventCategoryType == EventCategoryType.Menu)
             {
-                if (eventData.EventActionType == EventActionType.OnPause)
-                    this.StatusType = StatusType.Drawn | StatusType.Update;
-                else if (eventData.EventActionType == EventActionType.OnPlay)
-                    this.StatusType = StatusType.Off;
+                switch (eventData.EventActionType)
+                {
+                    case EventActionType.OnPause:
+                        SetMenuVisibility(true);
+                        break;
+                    case EventActionType.OnPlay:
+                        SetMenuVisibility(false);
+                        break;
+                    case EventActionType.OnLose:
+                        SetScene("lose");
+                        SetMenuVisibility(true);
+                        break;
+                    case EventActionType.OnWin:
+                        SetScene("win");
+                        SetMenuVisibility(true);
+                        break;
+                }
             }
+        }
+
+        private void SetMenuVisibility(bool show)
+        {
+            if (show)
+                this.StatusType = StatusType.Drawn | StatusType.Update;
+            else
+                this.StatusType = StatusType.Off;
         }
 
         protected override void HandleInput(GameTime gameTime)

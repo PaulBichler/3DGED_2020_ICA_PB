@@ -407,8 +407,25 @@ namespace GDGame
             uiObject = new UITextureObject("exit_bckgnd", ActorType.UITextureObject, StatusType.Drawn,
                 transform2D, Color.White, 1, SpriteEffects.None, texture, new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
             menuManager.Add("exit", uiObject);
+
+            //background lose Screen
+            texture = textureDictionary["exitmenuwithtrans"];
+            fullScreenScaleFactor = new Vector2((float)_graphics.PreferredBackBufferWidth / texture.Width, (float)_graphics.PreferredBackBufferHeight / texture.Height);
+            transform2D = new Transform2D(fullScreenScaleFactor);
+            uiObject = new UITextureObject("lose_bckgnd", ActorType.UITextureObject, StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture, new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
+            menuManager.Add("lose", uiObject);
+
+            //background win Screen
+            texture = textureDictionary["exitmenuwithtrans"];
+            fullScreenScaleFactor = new Vector2((float)_graphics.PreferredBackBufferWidth / texture.Width, (float)_graphics.PreferredBackBufferHeight / texture.Height);
+            transform2D = new Transform2D(fullScreenScaleFactor);
+            uiObject = new UITextureObject("lose_bckgnd", ActorType.UITextureObject, StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture, new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
+            menuManager.Add("win", uiObject);
             #endregion All Menu Background Images
 
+            #region Main Menu Buttons
             //main menu buttons
             texture = textureDictionary["genericbtn"];
 
@@ -446,10 +463,14 @@ namespace GDGame
             uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
               mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
-            menuManager.Add("main", uiObject);
+            menuManager.Add("main", uiObject); 
+            #endregion
 
             //finally dont forget to SetScene to say which menu should be drawn/updated!
             menuManager.SetScene("main");
+
+
+
         }
 
         private void InitEventDispatcher()
@@ -548,7 +569,7 @@ namespace GDGame
             Components.Add(tweeningManager);
 
             //Time Manager (provides timed callbacks)
-            timeManager = new TimeManager(this, StatusType.Update);
+            timeManager = new TimeManager(this, StatusType.Off);
             Components.Add(timeManager);
         }
 
@@ -603,7 +624,7 @@ namespace GDGame
                 ActorType.Camera3D, StatusType.Update, transform3D,
                 ProjectionParameters.StandardDeepSixteenTen, viewPort);
 
-            camera3D.ControllerList.Add(new FollowActorController(
+            camera3D.ControllerList.Add(new PlayerFollowCameraController(
                 GameConstants.Controllers_CameraFollowPlayer,
                 ControllerType.FollowCamera,
                 null, GameConstants.PlayerFollowCamera_ElevationAngle, 

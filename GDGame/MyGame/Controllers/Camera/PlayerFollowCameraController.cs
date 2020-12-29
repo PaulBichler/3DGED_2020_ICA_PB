@@ -7,12 +7,12 @@ using Microsoft.Xna.Framework;
 
 namespace GDGame.MyGame.Controllers
 {
-    public class FollowActorController : Controller
+    public class PlayerFollowCameraController : Controller
     {
         private Transform3D targetActorTransform, parentTransform;
         private float angle, distance;
 
-        public FollowActorController(string id, ControllerType controllerType, Transform3D targetActorTransform, float angle, float distance) : base(id, controllerType)
+        public PlayerFollowCameraController(string id, ControllerType controllerType, Transform3D targetActorTransform, float angle, float distance) : base(id, controllerType)
         {
             this.angle = angle;
             this.distance = distance;

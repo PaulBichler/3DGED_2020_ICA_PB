@@ -10,7 +10,7 @@ namespace GDGame.MyGame.Managers
     {
         private class Timer
         {
-            public bool pause;
+            public bool Pause;
 
             private float currentSeconds;
             private float seconds;
@@ -25,7 +25,7 @@ namespace GDGame.MyGame.Managers
 
             public bool Update(GameTime gameTime)
             {
-                if (pause) return false;
+                if (Pause) return false;
 
                 currentSeconds += gameTime.ElapsedGameTime.Milliseconds / 1000.0f;
                 if (currentSeconds >= seconds)
@@ -81,7 +81,7 @@ namespace GDGame.MyGame.Managers
         public static void PauseTimer(string referenceId)
         {
             if (_currentTimers.ContainsKey(referenceId))
-                _currentTimers[referenceId].pause = true;
+                _currentTimers[referenceId].Pause = true;
         }
 
         //Remove a timer by its reference id
@@ -95,7 +95,7 @@ namespace GDGame.MyGame.Managers
         public static void ResumeTimer(string referenceId)
         {
             if (_currentTimers.ContainsKey(referenceId))
-                _currentTimers[referenceId].pause = false;
+                _currentTimers[referenceId].Pause = false;
         }
     }
 }
