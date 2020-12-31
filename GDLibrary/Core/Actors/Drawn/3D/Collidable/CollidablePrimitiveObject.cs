@@ -184,6 +184,54 @@ namespace GDLibrary.Actors
             return null;
         }
 
+        protected Actor CheckCollisionAfterTranslation(Vector3 translation)
+        {
+            Actor collision = null;
+
+            foreach (IActor actor in objectManager.OpaqueList)
+            {
+                collision = CheckCollision(null, (Actor3D)actor, translation);
+                if (collision != null)
+                    return collision;
+            }
+
+            foreach (IActor actor in objectManager.TransparentList)
+            {
+                collision = CheckCollision(null, (Actor3D)actor, translation);
+                if (collision != null)
+                    return collision;
+            }
+
+            return null;
+        }
+
+        private Actor CheckCollision(GameTime gameTime, Actor3D actor3D, Vector3 translation)
+        {
+            if (!Equals(actor3D))
+            {
+                if (actor3D is CollidablePrimitiveObject)
+                {
+                    CollidablePrimitiveObject collidableObject = actor3D as CollidablePrimitiveObject;
+                    if (CollisionPrimitive.Intersects(collidableObject.CollisionPrimitive, translation))
+                    {
+                        return collidableObject;
+                    }
+                }
+                else if (actor3D is CollidableZoneObject)
+                {
+                    CollidableZoneObject zoneObject = actor3D as CollidableZoneObject;
+                    if (CollisionPrimitive.Intersects(zoneObject.CollisionPrimitive, translation))
+                    {
+                        return zoneObject;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private 
+
         //apply suggested movement since no collision will occur if the player moves to that position
         protected virtual void ApplyInput(GameTime gameTime)
         {

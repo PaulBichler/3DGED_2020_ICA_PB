@@ -89,12 +89,7 @@ namespace GDGame
 
         #endregion Security Camera
 
-        #region Car
-
-        public static readonly float carMoveSpeed = 0.08f;
-        public static readonly float carRotateSpeed = 0.06f;
-
-        #endregion Car
+        public static readonly int Player_MovementTimeInMs = 300;
 
         public static readonly float Projectile_Cooldown = 1.5f;
     }

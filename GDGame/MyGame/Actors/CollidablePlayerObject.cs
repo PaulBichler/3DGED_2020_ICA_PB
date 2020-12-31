@@ -1,4 +1,6 @@
-﻿using GDGame.MyGame.Enums;
+﻿using System;
+using GDGame;
+using GDGame.MyGame.Enums;
 using GDGame.MyGame.Managers;
 using GDLibrary.Actors;
 using GDLibrary.Enums;
@@ -17,7 +19,7 @@ namespace GDLibrary
     public class CollidablePlayerObject : CollidablePrimitiveObject
     {
         #region Fields
-        private float moveSpeed, rotationSpeed;
+        private float moveSpeed;
         private KeyboardManager keyboardManager;
         private Keys[] moveKeys;
 
@@ -29,12 +31,10 @@ namespace GDLibrary
         public CollidablePlayerObject(string id, ActorType actorType, StatusType statusType, Transform3D transform,
             EffectParameters effectParameters, IVertexData vertexData,
             ICollisionPrimitive collisionPrimitive, ObjectManager objectManager,
-            Keys[] moveKeys, float moveSpeed, float rotationSpeed, KeyboardManager keyboardManager)
+            Keys[] moveKeys, KeyboardManager keyboardManager)
             : base(id, actorType, statusType, transform, effectParameters, vertexData, collisionPrimitive, objectManager)
         {
             this.moveKeys = moveKeys;
-            this.moveSpeed = moveSpeed;
-            this.rotationSpeed = rotationSpeed;
 
             //for movement
             this.keyboardManager = keyboardManager;
@@ -63,13 +63,26 @@ namespace GDLibrary
             {
                 if (!isMoving && moveDir != Vector3.Zero)
                 {
-                    EventDispatcher.Publish(new EventData
-                    (
-                        EventCategoryType.Tween, EventActionType.OnAdd, new object[]
+                    if (ground != null && ground.ActorType == ActorType.WaterPlatform)
+                    {
+                        Actor nextGround = CheckCollisionAfterTranslation(moveDir - Vector3.UnitY);
+                        if (nextGround != null && nextGround.ActorType == ActorType.WaterPlatform)
                         {
-                            new Tweener(this, 300, moveDir, true, MovementCallback, LoopType.PlayOnce, EasingType.easeOut)
+                            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
+                            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {nextGround as Actor3D, this}));
                         }
-                    ));
+                    }
+
+                    Tweener jumpDown = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
+                        moveDir / 2 - Vector3.Up, true, 
+                        MovementCallback, LoopType.PlayOnce, EasingType.easeOut);
+                    
+                    Tweener jumpUp = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
+                        moveDir / 2 + Vector3.Up, true, 
+                        actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new [] { jumpDown })), 
+                        LoopType.PlayOnce, EasingType.easeOut);
+
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[] { jumpUp }));
                     isMoving = true;
                 }
             }
@@ -88,7 +101,8 @@ namespace GDLibrary
         /// </summary>
         private void CheckGround()
         {
-            Actor newGround = Raycast(Transform3D.Translation, -Vector3.UnitY, 1f);
+            //Actor newGround = Raycast(Transform3D.Translation, -Vector3.UnitY, 1f);
+            Actor newGround = CheckCollisionAfterTranslation(-Vector3.UnitY);
             if (newGround == null)
             {
                 //No ground detected --> player dies (Water tiles have no collision, so water will kill the player too)
@@ -100,11 +114,6 @@ namespace GDLibrary
                 return;
             }
 
-            //Detach from the last water platform
-            if(ground != null && ground.ActorType == ActorType.WaterPlatform)
-                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new [] {ground as Actor3D, this}));
-
-            //Attach to a new water platform
             if (newGround.ActorType == ActorType.WaterPlatform)
             {
                 Vector3 platformTrans = (newGround as Actor3D).Transform3D.Translation;
@@ -125,13 +134,13 @@ namespace GDLibrary
         protected override void HandleInput(GameTime gameTime)
         {
             if (keyboardManager.IsKeyDown(moveKeys[0])) //Forward
-                Transform3D.TranslateIncrement = moveDir = -Vector3.UnitZ;
+                moveDir = -Vector3.UnitZ;
             else if (keyboardManager.IsKeyDown(moveKeys[1])) //Backward
-                Transform3D.TranslateIncrement = moveDir = Vector3.UnitZ;
+                moveDir = Vector3.UnitZ;
             else if (keyboardManager.IsKeyDown(moveKeys[2])) //Left
-                Transform3D.TranslateIncrement = moveDir = -Vector3.UnitX;
+                moveDir = -Vector3.UnitX;
             else if (keyboardManager.IsKeyDown(moveKeys[3])) //Right
-                Transform3D.TranslateIncrement = moveDir = Vector3.UnitX;
+                moveDir = Vector3.UnitX;
         }
 
         /********************************************************************************************/

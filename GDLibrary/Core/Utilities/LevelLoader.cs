@@ -8,6 +8,7 @@ using GDGame;
 using GDGame.MyGame.Controllers;
 using GDGame.MyGame.Managers;
 using GDLibrary.Enums;
+using GDLibrary.Parameters;
 
 namespace GDLibrary.Utilities
 {
@@ -73,13 +74,11 @@ namespace GDLibrary.Utilities
             return list;
         }
 
-        private Random rand = new Random();
-
         private int count = 1;
 
         private DrawnActor3D GetObjectFromColor(Color color, Vector3 translation, Texture2D texture, int x)
         {
-            //if the pixel is red then draw a tall (stretched collidable unlit cube)
+            //add an else if for each type of object that you want to load...
             if (color.Equals(new Color(255, 0, 0)))
             {
                 #region Player
@@ -179,12 +178,10 @@ namespace GDLibrary.Utilities
 
                 drawnActor3D.ControllerList.Add(spawnController);
 
-                TimeManager.ExecuteInSeconds("test " + count, 3f, () => spawnController.SpawnObstacle());
+                TimeManager.ExecuteInSeconds("test " + count, 3f + new Random().Next(0, 2), () => spawnController.SpawnObstacle());
                 return drawnActor3D; 
                 #endregion
             }
-
-            //add an else if for each type of object that you want to load...
 
             return null;
         }

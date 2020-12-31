@@ -35,6 +35,7 @@
         Obstacle,
         WaterPlatform,
         DeathZone,
+        WinZone,
 
         Camera2D,
         Camera3D,

@@ -789,12 +789,11 @@ namespace GDGame
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             CollidablePlayerObject player = new CollidablePlayerObject(
-                GameConstants.Player,
-                ActorType.PC,
+                GameConstants.Player, ActorType.PC,
                 StatusType.Drawn | StatusType.Update,
-                transform3D, effectParameters,
-                vertexData, new BoxCollisionPrimitive(transform3D, Vector3.One / 2), objectManager,
-                new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }, .2f, .2f, keyboardManager);
+                transform3D, effectParameters, vertexData, 
+                new BoxCollisionPrimitive(transform3D, Vector3.One / 2), objectManager,
+                new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }, keyboardManager);
             archetypeDictionary.Add(player.ID, player);
             #endregion
 
