@@ -61,30 +61,35 @@ namespace GDLibrary
             //below when we hit against a zone
             if (Collidee == null)
             {
-                if (!isMoving && moveDir != Vector3.Zero)
+                Move();
+            }
+        }
+
+        private void Move()
+        {
+            if (!isMoving && moveDir != Vector3.Zero)
+            {
+                if (ground != null && ground.ActorType == ActorType.WaterPlatform)
                 {
-                    if (ground != null && ground.ActorType == ActorType.WaterPlatform)
+                    Actor nextGround = CheckCollisionAfterTranslation(moveDir - Vector3.UnitY);
+                    if (nextGround != null && nextGround.ActorType == ActorType.WaterPlatform)
                     {
-                        Actor nextGround = CheckCollisionAfterTranslation(moveDir - Vector3.UnitY);
-                        if (nextGround != null && nextGround.ActorType == ActorType.WaterPlatform)
-                        {
-                            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
-                            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {nextGround as Actor3D, this}));
-                        }
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {nextGround as Actor3D, this}));
                     }
-
-                    Tweener jumpDown = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
-                        moveDir / 2 - Vector3.Up, true, 
-                        MovementCallback, LoopType.PlayOnce, EasingType.easeOut);
-                    
-                    Tweener jumpUp = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
-                        moveDir / 2 + Vector3.Up, true, 
-                        actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new [] { jumpDown })), 
-                        LoopType.PlayOnce, EasingType.easeOut);
-
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[] { jumpUp }));
-                    isMoving = true;
                 }
+
+                Tweener jumpDown = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
+                    moveDir / 2 - Vector3.Up, true, 
+                    MovementCallback, LoopType.PlayOnce, EasingType.easeOut);
+                    
+                Tweener jumpUp = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
+                    moveDir / 2 + Vector3.Up, true, 
+                    actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new [] { jumpDown })), 
+                    LoopType.PlayOnce, EasingType.easeOut);
+
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[] { jumpUp }));
+                isMoving = true;
             }
         }
 
@@ -173,7 +178,7 @@ namespace GDLibrary
                     System.Diagnostics.Debug.WriteLine((collidee as CollidablePrimitiveObject).Transform3D.Translation);
 
                     //Distance check to prevent collision issues
-                    if(Vector3.Distance(obstacle.Transform3D.Translation, Transform3D.Translation) <= 1f)
+                    //if(Vector3.Distance(obstacle.Transform3D.Translation, Transform3D.Translation) <= 1f)
                         Die();
                 }
                 else if (collidee.ActorType == ActorType.CollidablePickup)
@@ -189,7 +194,7 @@ namespace GDLibrary
         {
             CollidablePlayerObject player = new CollidablePlayerObject(ID, ActorType, StatusType, Transform3D.Clone() as Transform3D, 
                 EffectParameters.Clone() as EffectParameters, IVertexData.Clone() as IVertexData, CollisionPrimitive.Clone() as ICollisionPrimitive, 
-                ObjectManager, moveKeys, moveSpeed, rotationSpeed, keyboardManager);
+                ObjectManager, moveKeys, keyboardManager);
 
             player.ControllerList.AddRange(GetControllerListClone());
             return player;

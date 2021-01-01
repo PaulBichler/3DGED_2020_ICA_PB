@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GDGame.MyGame.Actors;
 using GDGame.MyGame.Controllers;
 using GDLibrary;
 using GDLibrary.Core.Managers.State;
@@ -783,7 +784,7 @@ namespace GDGame
 
             #region Player
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+                    new Vector3(0.8f, 0.8f, 0.8f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["checkerboard"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
@@ -852,12 +853,12 @@ namespace GDGame
                 textureDictionary["checkerboard"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
-            primitiveObject = new PrimitiveObject(
-                "Obstacle Spawner",
-                ActorType.MovingObstacleSpawner, StatusType.Drawn | StatusType.Update,
-                transform3D, effectParameters, vertexData
-                );
-            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
+            MovingObstacleSpawner obstacleSpawner = new MovingObstacleSpawner(
+                "Obstacle Spawner", ActorType.MovingObstacleSpawner,
+                StatusType.Drawn | StatusType.Update, transform3D, 
+                effectParameters, vertexData, new BoxCollisionPrimitive(transform3D), objectManager);
+
+            archetypeDictionary.Add(obstacleSpawner.ID, obstacleSpawner);
             #endregion
 
             #region Obstacle

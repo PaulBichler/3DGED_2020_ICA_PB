@@ -195,7 +195,7 @@ namespace GDLibrary.Managers
             if (actor == null)
                 return;
 
-            if (actor.EffectParameters.Alpha < 1)
+            if (actor.EffectParameters?.Alpha < 1)
             {
                 transparentList.Add(actor);
             }
