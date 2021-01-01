@@ -60,9 +60,7 @@ namespace GDLibrary
             //if no collision then move - see how we set this.Collidee to null in HandleCollisionResponse()
             //below when we hit against a zone
             if (Collidee == null)
-            {
                 Move();
-            }
         }
 
         private void Move()
@@ -70,14 +68,7 @@ namespace GDLibrary
             if (!isMoving && moveDir != Vector3.Zero)
             {
                 if (ground != null && ground.ActorType == ActorType.WaterPlatform)
-                {
-                    Actor nextGround = CheckCollisionAfterTranslation(moveDir - Vector3.UnitY);
-                    if (nextGround != null && nextGround.ActorType == ActorType.WaterPlatform)
-                    {
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {nextGround as Actor3D, this}));
-                    }
-                }
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
 
                 Tweener jumpDown = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
                     moveDir / 2 - Vector3.Up, true, 
@@ -106,8 +97,8 @@ namespace GDLibrary
         /// </summary>
         private void CheckGround()
         {
-            //Actor newGround = Raycast(Transform3D.Translation, -Vector3.UnitY, 1f);
             Actor newGround = CheckCollisionAfterTranslation(-Vector3.UnitY);
+
             if (newGround == null)
             {
                 //No ground detected --> player dies (Water tiles have no collision, so water will kill the player too)

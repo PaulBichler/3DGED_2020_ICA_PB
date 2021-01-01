@@ -174,6 +174,7 @@ namespace GDGame.MyGame.Managers
         public override void HandleEvent(EventData eventData)
         {
             base.HandleEvent(eventData);
+            List<Tweener> tweensFound;
 
             if (eventData.EventCategoryType == EventCategoryType.Tween)
             {
@@ -183,9 +184,14 @@ namespace GDGame.MyGame.Managers
                         AddTween(eventData.Parameters[0] as Tweener);
                         break;
                     case EventActionType.OnAddChild:
-                        List<Tweener> tweensFound = GetActorTweens<Tweener>(eventData.Parameters[0] as Actor3D);
+                        tweensFound = GetActorTweens<Tweener>(eventData.Parameters[0] as Actor3D);
                         foreach (var tween in tweensFound)
                             tween.AddChild(eventData.Parameters[1] as Actor3D);
+                        break;
+                    case EventActionType.OnRemoveChild:
+                        tweensFound = GetActorTweens<Tweener>(eventData.Parameters[0] as Actor3D);
+                        foreach (var tween in tweensFound)
+                            tween.RemoveChild(eventData.Parameters[1] as Actor3D);
                         break;
                     case EventActionType.OnRemoveActor:
                         RemoveActorTweens(eventData.Parameters[0] as Actor3D);
