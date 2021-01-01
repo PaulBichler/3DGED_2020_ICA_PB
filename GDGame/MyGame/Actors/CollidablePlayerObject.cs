@@ -19,7 +19,6 @@ namespace GDLibrary
     public class CollidablePlayerObject : CollidablePrimitiveObject
     {
         #region Fields
-        private float moveSpeed;
         private KeyboardManager keyboardManager;
         private Keys[] moveKeys;
 
@@ -29,17 +28,14 @@ namespace GDLibrary
         #endregion Fields
 
         public CollidablePlayerObject(string id, ActorType actorType, StatusType statusType, Transform3D transform,
-            EffectParameters effectParameters, IVertexData vertexData,
-            ICollisionPrimitive collisionPrimitive, ObjectManager objectManager,
-            Keys[] moveKeys, KeyboardManager keyboardManager)
+            EffectParameters effectParameters, IVertexData vertexData, ICollisionPrimitive collisionPrimitive, 
+            ObjectManager objectManager, Keys[] moveKeys, KeyboardManager keyboardManager)
             : base(id, actorType, statusType, transform, effectParameters, vertexData, collisionPrimitive, objectManager)
         {
             this.moveKeys = moveKeys;
-
-            //for movement
             this.keyboardManager = keyboardManager;
 
-            //Notify the GameStateManager that the player has been spawned (used for the camera)
+            //Notify the GameStateManager that the player has been spawned (used to set the target of the camera)
             EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnSpawn, new []{ this }));
         }
 
@@ -67,6 +63,7 @@ namespace GDLibrary
         {
             if (!isMoving && moveDir != Vector3.Zero)
             {
+                //we are currently on a water platform --> detach from it 
                 if (ground != null && ground.ActorType == ActorType.WaterPlatform)
                     EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
 
@@ -144,12 +141,13 @@ namespace GDLibrary
         //this is where you write the application specific CDCR response for your game
         protected override void HandleCollisionResponse(Actor collidee)
         {
-            if (collidee is CollidableZoneObject)
+            if (collidee is CollidableZoneObject zone)
             {
-                CollidableZoneObject simpleZoneObject = collidee as CollidableZoneObject;
+                if(zone.ActorType == ActorType.WinZone)
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnWin, null));
 
                 //do something based on the zone type - see Main::InitializeCollidableZones() for ID
-                if (simpleZoneObject.ID.Equals("camera trigger zone 1"))
+                if (zone.ID.Equals("camera trigger zone 1"))
                 {
                     //publish an event e.g sound, health progress
                     object[] additionalParameters = { "boing" };
