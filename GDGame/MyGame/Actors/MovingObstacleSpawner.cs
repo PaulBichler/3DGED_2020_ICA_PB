@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GDGame.MyGame.Managers;
+using GDGame.MyGame.Utilities;
 using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
@@ -61,7 +62,7 @@ namespace GDGame.MyGame.Actors
         {
             EventDispatcher.Publish(new EventData(
                 EventCategoryType.Tween, EventActionType.OnAdd,
-                new object[] { new Tweener(
+                new object[] { new TranslationTween(
                     obstacle, 1000 * (int)(destination - obstacle.Transform3D.Translation).Length(), 
                     destination, false, ResetObstacle)
                 })

@@ -2,6 +2,7 @@
 using GDGame;
 using GDGame.MyGame.Enums;
 using GDGame.MyGame.Managers;
+using GDGame.MyGame.Utilities;
 using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
@@ -70,11 +71,11 @@ namespace GDLibrary
                 if (ground != null && ground.ActorType == ActorType.WaterPlatform)
                     EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
 
-                Tweener jumpDown = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
+                TranslationTween jumpDown = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
                     moveDir / 2 - Vector3.Up, true, 
                     MovementCallback, LoopType.PlayOnce, EasingType.easeOut);
                     
-                Tweener jumpUp = new Tweener(this, GameConstants.Player_MovementTimeInMs / 2, 
+                TranslationTween jumpUp = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
                     moveDir / 2 + Vector3.Up, true, 
                     actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new [] { jumpDown })), 
                     LoopType.PlayOnce, EasingType.easeOut);
@@ -89,6 +90,12 @@ namespace GDLibrary
             moveDir = Vector3.Zero;
             isMoving = false;
             CheckGround();
+
+            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[]
+            {
+                new RotationTween(this, 500, new Vector3(0, 180, 0), true, 
+                    null, LoopType.PlayOnce, EasingType.easeIn) 
+            }));
         }
 
         /// <summary>
@@ -104,7 +111,7 @@ namespace GDLibrary
                 //No ground detected --> player dies (Water tiles have no collision, so water will kill the player too)
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []
                 {
-                    new Tweener(this, 200, new Vector3(0, -2, 0), 
+                    new TranslationTween(this, 200, new Vector3(0, -2, 0), 
                         true, actor3D => Die()) 
                 }));
                 return;
