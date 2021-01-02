@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GDGame.MyGame.Managers;
 using GDLibrary.Actors;
 using GDLibrary.Enums;
@@ -14,7 +13,6 @@ namespace GDGame.MyGame.Actors
     public class MovingObstacleSpawner : CollidablePrimitiveObject
     {
         private CollidablePrimitiveObject obstacleArchetype;
-        private int levelWidth;
         private Vector3 moveDirection, spawnOffset, destination;
 
         public MovingObstacleSpawner(string id, ActorType actorType, StatusType statusType, Transform3D transform3D, 
@@ -26,7 +24,6 @@ namespace GDGame.MyGame.Actors
         public void InitSpawner(CollidablePrimitiveObject obstacleToSpawn, Vector3 moveDir, float levelWidth, Vector3 spawnOffset = default)
         {
             this.obstacleArchetype = obstacleToSpawn;
-            this.levelWidth = (int)MathF.Round(levelWidth);
             moveDirection = moveDir;
             this.spawnOffset = spawnOffset;
 
@@ -66,25 +63,19 @@ namespace GDGame.MyGame.Actors
                 EventCategoryType.Tween, EventActionType.OnAdd,
                 new object[] { new Tweener(
                     obstacle, 1000 * (int)(destination - obstacle.Transform3D.Translation).Length(), 
-                    destination, false, DestroyObstacle)
+                    destination, false, ResetObstacle)
                 })
             );
         }
 
         /// <summary>
-        /// Movement callback for the obstacle. Destroys the obstacle and resets it
+        /// Movement callback for the obstacle. Resets the obstacles position
         /// </summary>
-        /// <param name="actor">The actor to reset</param>
-        private void DestroyObstacle(Actor3D actor)
+        /// <param name="obstacle">The obstacle to reset</param>
+        private void ResetObstacle(Actor3D obstacle)
         {
-            EventDispatcher.Publish(new EventData(
-                EventCategoryType.Object, EventActionType.OnRemoveActor, 
-                null, null, 
-                new object[] { actor as DrawnActor3D })
-            );
-
-            //new obstacle is spawned when the old one is destroyed
-            SpawnObstacle();
+            obstacle.Transform3D.Translation = Transform3D.Translation + spawnOffset;
+            MoveObstacle(obstacle);
         }
 
         public new object Clone()
