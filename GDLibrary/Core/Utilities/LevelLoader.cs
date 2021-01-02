@@ -38,6 +38,12 @@ namespace GDLibrary.Utilities
             this.textureDictionary = textureDictionary;
         }
 
+        //public List<DrawnActor3D> Load(string textureID,
+        //    float scaleX, float scaleZ, float height, Vector3 offset)
+        //{
+        //    return Load(textureDictionary[textureID], scaleX, scaleZ, height, offset);
+        //}
+
         public List<DrawnActor3D> Load(Texture2D texture,
             float scaleX, float scaleZ, float height, Vector3 offset)
         {
@@ -96,6 +102,7 @@ namespace GDLibrary.Utilities
 
                 drawnActor3D.ID = "Player " + count++;
                 drawnActor3D.Transform3D.Translation = translation + new Vector3(0, -0.1f, 0);
+                drawnActor3D.Initialize();
                 return drawnActor3D; 
                 #endregion
             }

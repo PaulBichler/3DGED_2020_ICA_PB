@@ -18,7 +18,6 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Diagnostics;
 using GDGame.MyGame.Actors;
 using GDGame.MyGame.Controllers;
 using GDLibrary;
@@ -44,6 +43,7 @@ namespace GDGame
         private MyGameStateManager gameStateManager;
         private TweeningManager tweeningManager;
         private TimeManager timeManager;
+        private LevelManager levelManager;
 
         //used to process and deliver events received from publishers
         private EventDispatcher eventDispatcher;
@@ -561,10 +561,6 @@ namespace GDGame
             soundManager = new SoundManager(this, StatusType.Update);
             Components.Add(soundManager);
 
-            //Game State
-            gameStateManager = new MyGameStateManager(this, StatusType.Update, cameraManager);
-            Components.Add(gameStateManager);
-
             //Tweening
             tweeningManager = new TweeningManager(this, StatusType.Update);
             Components.Add(tweeningManager);
@@ -572,6 +568,13 @@ namespace GDGame
             //Time Manager (provides timed callbacks)
             timeManager = new TimeManager(this, StatusType.Off);
             Components.Add(timeManager);
+
+            //stores all the levels and loads them when necessary
+            levelManager = new LevelManager(objectManager);
+
+            //Game State
+            gameStateManager = new MyGameStateManager(this, StatusType.Update, cameraManager, levelManager);
+            Components.Add(gameStateManager);
         }
 
         private void InitCameras3D()
@@ -912,43 +915,35 @@ namespace GDGame
             //pyramids
             InitDecorators();
 
-            /************ Collidable ************/
-
-            Transform3D transform3D = new Transform3D(new Vector3(0, 5, 0), Vector3.UnitZ, Vector3.UnitY);
-            BoxCollisionPrimitive boxPrim = new BoxCollisionPrimitive(transform3D);
-
-            //CollidablePrimitiveObject collPrimObj = new CollidablePrimitiveObject("id",
-            //    ActorType.CollidableDecorator, StatusType.Drawn, transform3D,
-            //    effectParameters, vertexData, boxPrim, this.objectManager);
-
             /************ Level-loader (can be collidable or non-collidable) ************/
-
-            LevelLoader<PrimitiveObject> levelLoader = new LevelLoader<PrimitiveObject>(
+            levelManager.LevelLoader = new LevelLoader<PrimitiveObject>(
                 this.archetypeDictionary, this.textureDictionary);
-            List<DrawnActor3D> actorList = null;
 
-            //add level1_1 contents
-            actorList = levelLoader.Load(
-                this.textureDictionary["level_1"],
-                                1,     //number of in-world x-units represented by 1 pixel in image
-                                1,     //number of in-world z-units represented by 1 pixel in image
-                                1,     //y-axis height offset
-                                new Vector3(0, 0, 0) //offset to move all new objects by
-                                );
-            this.objectManager.Add(actorList);
+            #region Level 1
+            LevelInfo level = new LevelInfo
+            {
+                Name = "Level 1",
+                LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1"], textureDictionary["level_1_2"] },
+                xScale = 1,
+                zScale = 1,
+                LayerHeightOffset = 1,
+                Offset = Vector3.Zero
+            };
+            levelManager.AddLevel("Level 1", level);
+            #endregion
 
-            //clear the list otherwise when we add level1_2 we would re-add level1_1 objects to object manager
-            actorList.Clear();
-
-            //add level1_2 contents
-            actorList = levelLoader.Load(
-             this.textureDictionary["level_1_2"],
-                             1,     //number of in-world x-units represented by 1 pixel in image
-                             1,     //number of in-world z-units represented by 1 pixel in image
-                             2,     //y-axis height offset
-                             new Vector3(0, 0, 0) //offset to move all new objects by
-                             );
-            this.objectManager.Add(actorList);
+            #region Level 2
+            level = new LevelInfo
+            {
+                Name = "Level 2",
+                LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1"], textureDictionary["level_1_2"] },
+                xScale = 1,
+                zScale = 1,
+                LayerHeightOffset = 1,
+                Offset = Vector3.Zero
+            };
+            levelManager.AddLevel("Level 2", level); 
+            #endregion
         }
 
         /// <summary>

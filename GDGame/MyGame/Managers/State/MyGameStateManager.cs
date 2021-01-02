@@ -1,4 +1,5 @@
 ﻿using GDGame.MyGame.Controllers;
+using GDGame.MyGame.Managers;
 using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
@@ -15,11 +16,13 @@ namespace GDLibrary.Core.Managers.State
     public class MyGameStateManager : PausableGameComponent, IEventHandler
     {
         private CameraManager<Camera3D> cameraManager;
+        private LevelManager levelManager;
         private Actor3D player;
 
-        public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager) : base(game, statusType)
+        public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager, LevelManager levelManager) : base(game, statusType)
         {
             this.cameraManager = cameraManager;
+            this.levelManager = levelManager;
         }
 
         public override void SubscribeToEvents()
@@ -43,11 +46,13 @@ namespace GDLibrary.Core.Managers.State
                         break;
                     case EventActionType.OnStart:
                         //start curve camera
+                        levelManager.LoadLevel(eventData.Parameters[0] as string);
                         StartGame();
                         break;
                     case EventActionType.OnSpawn:
                         //get a reference to the player to set the target in the follow camera
                         player = eventData.Parameters[0] as Actor3D;
+                        (cameraManager[2].ControllerList.Find(controller => controller is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
                         break;
                 }
             }
@@ -58,14 +63,12 @@ namespace GDLibrary.Core.Managers.State
 
         private void StartGame()
         {
-
-
+            EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
             StartCamera();
         }
 
         private void StartCamera()
         {
-            (cameraManager[2].ControllerList.Find(controller => controller is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
             cameraManager.ActiveCameraIndex = 2;
         }
 

@@ -23,6 +23,8 @@ namespace GDGame.MyGame.Controllers
 
         public void SetTargetTransform(Transform3D target)
         {
+            if (target == null) return;
+
             this.targetActorTransform = target;
             initialY = target.Translation.Y;
             if (parentTransform != null)
@@ -34,8 +36,12 @@ namespace GDGame.MyGame.Controllers
 
         public override void Update(GameTime gameTime, IActor actor)
         {
-            parentTransform ??= (actor as Actor3D)?.Transform3D;
-            
+            if (parentTransform == null)
+            {
+                parentTransform = (actor as Actor3D)?.Transform3D;
+                SetTargetTransform(targetActorTransform);
+            }
+
             if (targetActorTransform == null || parentTransform == null) 
                 return;
 

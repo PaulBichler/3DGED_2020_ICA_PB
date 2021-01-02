@@ -34,7 +34,10 @@ namespace GDLibrary
         {
             this.moveKeys = moveKeys;
             this.keyboardManager = keyboardManager;
+        }
 
+        public void Initialize()
+        {
             //Notify the GameStateManager that the player has been spawned (used to set the target of the camera)
             EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnSpawn, new []{ this }));
         }
@@ -146,29 +149,13 @@ namespace GDLibrary
                 if(zone.ActorType == ActorType.WinZone)
                     EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnWin, null));
 
-                //do something based on the zone type - see Main::InitializeCollidableZones() for ID
-                if (zone.ID.Equals("camera trigger zone 1"))
-                {
-                    //publish an event e.g sound, health progress
-                    object[] additionalParameters = { "boing" };
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay, additionalParameters));
-                }
-
-                //IMPORTANT - setting this to null means that the ApplyInput() method will get called and the player can move through the zone.
                 Collidee = null;
             }
             else if (collidee is CollidablePrimitiveObject obstacle)
             {
                 if (collidee.ActorType == ActorType.Obstacle)
                 {
-                    System.Diagnostics.Debug.WriteLine(CollisionPrimitive);
-                    System.Diagnostics.Debug.WriteLine(Transform3D.Translation);
-                    System.Diagnostics.Debug.WriteLine((collidee as CollidablePrimitiveObject).CollisionPrimitive);
-                    System.Diagnostics.Debug.WriteLine((collidee as CollidablePrimitiveObject).Transform3D.Translation);
-
-                    //Distance check to prevent collision issues
-                    //if(Vector3.Distance(obstacle.Transform3D.Translation, Transform3D.Translation) <= 1f)
-                        Die();
+                    Die();
                 }
                 else if (collidee.ActorType == ActorType.CollidablePickup)
                 {

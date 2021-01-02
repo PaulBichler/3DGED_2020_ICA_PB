@@ -90,8 +90,7 @@ namespace GDGame.MyGame.Managers
             switch (uIButtonObject.ID)
             {
                 case "play":
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
-                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart, null));
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart,  new []{ "Level 1" }));
                     break;
 
                 case "controls":
