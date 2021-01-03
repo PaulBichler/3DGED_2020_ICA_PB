@@ -16,6 +16,7 @@ namespace GDLibrary.Actors
         #region Fields
 
         private EffectParameters effectParameters;
+        private BoundingBox bounds;
 
         #endregion Fields
 
@@ -26,6 +27,16 @@ namespace GDLibrary.Actors
             get
             {
                 return effectParameters;
+            }
+        }
+
+        public BoundingBox Bounds
+        {
+            get
+            {
+                bounds.Min = Transform3D.Scale / 2 * -Vector3.One + Transform3D.Translation;
+                bounds.Max = Transform3D.Scale / 2 * Vector3.One + Transform3D.Translation;
+                return bounds;
             }
         }
 

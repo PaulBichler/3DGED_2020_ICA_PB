@@ -4,6 +4,7 @@ using GDLibrary.GameComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using GDLibrary.Parameters;
 
 namespace GDLibrary.Managers
 {
@@ -61,7 +62,8 @@ namespace GDLibrary.Managers
             foreach (DrawnActor3D actor in objectManager.OpaqueList)
             {
                 if ((actor.StatusType & StatusType.Drawn) == StatusType.Drawn)
-                    actor.Draw(gameTime, activeCamera);
+                    if(activeCamera.CameraFrustum.Contains(actor.Bounds) != ContainmentType.Disjoint)
+                        actor.Draw(gameTime, activeCamera);
             }
 
             //sort the transparent objects so that those closest to the camera are the LAST drawn
@@ -71,7 +73,8 @@ namespace GDLibrary.Managers
             foreach (DrawnActor3D actor in objectManager.TransparentList)
             {
                 if ((actor.StatusType & StatusType.Drawn) == StatusType.Drawn)
-                    actor.Draw(gameTime, activeCamera);
+                    if(activeCamera.CameraFrustum.Contains(actor.Bounds) != ContainmentType.Disjoint)
+                        actor.Draw(gameTime, activeCamera);
             }
         }
 

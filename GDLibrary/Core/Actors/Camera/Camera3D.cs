@@ -16,6 +16,7 @@ namespace GDLibrary.Actors
 
         //name, active, Transform3D::Reset??
         private ProjectionParameters projectionParameters;
+        private BoundingFrustum cameraFrustum;
 
         private Viewport viewPort;
         private Matrix view;
@@ -61,6 +62,15 @@ namespace GDLibrary.Actors
             }
         }
 
+        public BoundingFrustum CameraFrustum
+        {
+            get
+            {
+                cameraFrustum.Matrix = View * Projection;
+                return cameraFrustum;
+            }
+        }
+
         #endregion Properties
 
         #region Constructors
@@ -71,6 +81,7 @@ namespace GDLibrary.Actors
         {
             this.projectionParameters = projectionParameters;
             this.viewPort = viewPort;
+            cameraFrustum = new BoundingFrustum(View * Projection);
         }
 
         #endregion Constructors
