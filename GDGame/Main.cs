@@ -864,7 +864,7 @@ namespace GDGame
             archetypeDictionary.Add(obstacleSpawner.ID, obstacleSpawner);
             #endregion
 
-            #region Obstacle
+            #region Moving Obstacle
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     Vector3.One / 2, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
@@ -890,6 +890,22 @@ namespace GDGame
             collidable = new CollidablePrimitiveObject(
                 "Water Platform",
                 ActorType.WaterPlatform, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData,
+                new BoxCollisionPrimitive(transform3D), objectManager
+            );
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region Blocking Obstacle
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                "Blocking Obstacle",
+                ActorType.BlockingObstacle, StatusType.Drawn | StatusType.Update,
                 transform3D, effectParameters, vertexData,
                 new BoxCollisionPrimitive(transform3D), objectManager
             );

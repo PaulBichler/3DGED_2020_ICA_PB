@@ -63,77 +63,6 @@ namespace GDLibrary
                 Move();
         }
 
-        private void Move()
-        {
-            if (!isMoving && moveDir != Vector3.Zero)
-            {
-                //we are currently on a water platform --> detach from it 
-                if (ground != null && ground.ActorType == ActorType.WaterPlatform)
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
-
-                TranslationTween jumpDown = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
-                    moveDir / 2 - Vector3.Up, true, 
-                    MovementCallback, LoopType.PlayOnce, EasingType.easeOut);
-                    
-                TranslationTween jumpUp = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
-                    moveDir / 2 + Vector3.Up, true, 
-                    actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new [] { jumpDown })), 
-                    LoopType.PlayOnce, EasingType.easeOut);
-
-                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[] { jumpUp }));
-                isMoving = true;
-            }
-        }
-
-        private void MovementCallback(Actor3D actor)
-        {
-            moveDir = Vector3.Zero;
-            isMoving = false;
-            CheckGround();
-
-            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[]
-            {
-                new RotationTween(this, 500, new Vector3(0, 180, 0), true, 
-                    null, LoopType.PlayOnce, EasingType.easeIn) 
-            }));
-        }
-
-        /// <summary>
-        /// Checks what tile is directly underneath the player and performs an action based on it.
-        /// This is called directly after the player's move has finished.
-        /// </summary>
-        private void CheckGround()
-        {
-            Actor newGround = CheckCollisionAfterTranslation(-Vector3.UnitY);
-
-            if (newGround == null)
-            {
-                //No ground detected --> player dies (Water tiles have no collision, so water will kill the player too)
-                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []
-                {
-                    new TranslationTween(this, 200, new Vector3(0, -2, 0), 
-                        true, actor3D => Die()) 
-                }));
-                return;
-            }
-
-            if (newGround.ActorType == ActorType.WaterPlatform)
-            {
-                Vector3 platformTrans = (newGround as Actor3D).Transform3D.Translation;
-                Transform3D.Translation = new Vector3(platformTrans.X, Transform3D.Translation.Y, platformTrans.Z);
-                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {newGround as Actor3D, this}));
-            }
-
-            //Update the ground
-            ground = newGround;
-        }
-
-        private void Die()
-        {
-            EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnLose, null));
-            EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new object[] { this }));
-        }
-
         protected override void HandleInput(GameTime gameTime)
         {
             if (keyboardManager.IsKeyDown(moveKeys[0])) //Forward
@@ -171,6 +100,80 @@ namespace GDLibrary
                     EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, parameters));
                 }
             }
+        }
+
+        private void Move()
+        {
+            if (!isMoving && moveDir != Vector3.Zero)
+            {
+                Actor obstacleCheck = CheckCollisionAfterTranslation(moveDir);
+                if (obstacleCheck != null && obstacleCheck.ActorType == ActorType.BlockingObstacle)
+                    return;
+
+                //we are currently on a water platform --> detach from it 
+                if (ground != null && ground.ActorType == ActorType.WaterPlatform)
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
+
+                TranslationTween jumpDown = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
+                    moveDir / 2 - Vector3.Up, true, 
+                    MovementCallback, LoopType.PlayOnce, EasingType.easeOut);
+                    
+                TranslationTween jumpUp = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
+                    moveDir / 2 + Vector3.Up, true, 
+                    actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new [] { jumpDown })), 
+                    LoopType.PlayOnce, EasingType.easeOut);
+
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[] { jumpUp }));
+                isMoving = true;
+            }
+        }
+
+        private void MovementCallback(Actor3D actor)
+        {
+            moveDir = Vector3.Zero;
+            isMoving = false;
+            CheckGround();
+        }
+
+        /// <summary>
+        /// Checks what tile is directly underneath the player and performs an action based on it.
+        /// This is called directly after the player's move has finished.
+        /// </summary>
+        private void CheckGround()
+        {
+            Actor3D newGround = CheckCollisionAfterTranslation(-Vector3.UnitY) as Actor3D;
+
+            if (newGround == null)
+            {
+                //No ground detected --> player dies (Water tiles have no collision, so water will kill the player too)
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []
+                {
+                    new TranslationTween(this, 200, new Vector3(0, -2, 0), 
+                        true, actor3D => Die()) 
+                }));
+                return;
+            }
+
+            //Correcting the X and Y position of the player
+            Transform3D groundTransform = newGround.Transform3D;
+            Vector3 position = new Vector3(groundTransform.Translation.X, Transform3D.Translation.Y, groundTransform.Translation.Z);
+            Transform3D.Translation = position;
+
+            if (newGround.ActorType == ActorType.WaterPlatform)
+            {
+                Vector3 platformTrans = (newGround as Actor3D).Transform3D.Translation;
+                Transform3D.Translation = new Vector3(platformTrans.X, Transform3D.Translation.Y, platformTrans.Z);
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAddChild, new [] {newGround as Actor3D, this}));
+            }
+
+            //Update the ground
+            ground = newGround;
+        }
+
+        private void Die()
+        {
+            EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnLose, null));
+            EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new object[] { this }));
         }
 
         public new object Clone()

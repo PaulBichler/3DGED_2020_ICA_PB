@@ -33,6 +33,7 @@
         Projectile,
         MovingObstacleSpawner,
         Obstacle,
+        BlockingObstacle,
         WaterPlatform,
         DeathZone,
         WinZone,

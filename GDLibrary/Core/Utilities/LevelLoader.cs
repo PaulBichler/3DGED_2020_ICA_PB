@@ -38,12 +38,6 @@ namespace GDLibrary.Utilities
             this.textureDictionary = textureDictionary;
         }
 
-        //public List<DrawnActor3D> Load(string textureID,
-        //    float scaleX, float scaleZ, float height, Vector3 offset)
-        //{
-        //    return Load(textureDictionary[textureID], scaleX, scaleZ, height, offset);
-        //}
-
         public List<DrawnActor3D> Load(Texture2D texture,
             float scaleX, float scaleZ, float height, Vector3 offset)
         {
@@ -225,6 +219,18 @@ namespace GDLibrary.Utilities
                 drawnActor3D.Transform3D.Translation = translation;
 
                 movingObstacles.Add(drawnActor3D);
+                return drawnActor3D; 
+                #endregion
+            }
+
+            if (color.Equals(new Color(0, 255, 255)))
+            {
+                #region Blocking Obstacle
+                CollidablePrimitiveObject archetype = archetypeDictionary["Blocking Obstacle"] as CollidablePrimitiveObject;
+                CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
+
+                drawnActor3D.ID = "Blocking Obstacle " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
                 return drawnActor3D; 
                 #endregion
             }
