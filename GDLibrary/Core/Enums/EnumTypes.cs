@@ -31,6 +31,7 @@
         PC,    //hero
         Decorator, //architecture, obstacle
         Projectile,
+        Shooter,
         MovingObstacleSpawner,
         Obstacle,
         BlockingObstacle,
@@ -101,7 +102,8 @@
         ScaleLerpOverTime,
 
         ObstacleSpawner,
-        WaterPlatformSpawner
+        WaterPlatformSpawner,
+        ShootingController
     }
 
     /// <summary>

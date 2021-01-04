@@ -235,6 +235,18 @@ namespace GDLibrary.Utilities
                 #endregion
             }
 
+            if (color.Equals(new Color(255, 50, 255)))
+            {
+                CollidablePrimitiveObject archetype = archetypeDictionary["Shooter"] as CollidablePrimitiveObject;
+                CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
+
+                drawnActor3D.ID = "Shooter " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+                drawnActor3D.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController, 
+                    archetypeDictionary["Projectile"] as CollidableProjectile, 5f, 500));
+                return drawnActor3D; 
+            }
+
             return null;
         }
     }

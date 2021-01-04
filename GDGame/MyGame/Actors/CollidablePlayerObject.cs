@@ -1,5 +1,6 @@
 ﻿using System;
 using GDGame;
+using GDGame.MyGame.Actors;
 using GDGame.MyGame.Enums;
 using GDGame.MyGame.Managers;
 using GDGame.MyGame.Utilities;
@@ -89,7 +90,7 @@ namespace GDLibrary
             }
             else if (collidee is CollidablePrimitiveObject obstacle)
             {
-                if (collidee.ActorType == ActorType.Obstacle)
+                if (collidee.ActorType == ActorType.Obstacle || collidee is CollidableProjectile)
                 {
                     Die();
                 }

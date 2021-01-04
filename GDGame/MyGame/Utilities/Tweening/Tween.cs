@@ -24,6 +24,8 @@ namespace GDGame.MyGame.Utilities
         protected List<Actor3D> childActors;
         protected Vector3 origin, previous;
         protected int currentTimeInMs;
+
+        private Vector3 relativeDestination;
         #endregion
 
         #region Constructor & Core
@@ -37,9 +39,11 @@ namespace GDGame.MyGame.Utilities
             Relative = relative;
             Callback = callback;
 
-            this.destination = destination;
+            this.destination = relativeDestination = destination;
             childActors = new List<Actor3D>();
             currentTimeInMs = timeInMs;
+
+            Reset();
         }
 
         public virtual bool Process(GameTime gameTime)
@@ -58,10 +62,30 @@ namespace GDGame.MyGame.Utilities
                 case LoopType.PlayOnce:
                     Callback?.Invoke(Actor);
                     return true;
+                case LoopType.ReverseAndRepeat:
+                    Callback?.Invoke(Actor);
+                    currentTimeInMs = TimeInMs;
+                    Vector3 temp = origin;
+                    origin = destination;
+                    destination = temp;
+                    break;
+                case LoopType.Repeat:
+                    Callback?.Invoke(Actor);
+                    currentTimeInMs = TimeInMs;
+                    if (Relative)
+                    {
+                        origin = destination;
+                        destination += relativeDestination;
+                    }
+                    else
+                        Reset();
+                    break;
             }
 
             return false;
         }
+
+        protected abstract void Reset();
 
         protected Vector3 ComputeNextValue()
         {
@@ -114,8 +138,6 @@ namespace GDGame.MyGame.Utilities
         public TranslationTween(Actor3D actor, int timeInMs, Vector3 destination, bool relative, Action<Actor3D> callback = null, LoopType loopType = LoopType.PlayOnce, EasingType easingType = EasingType.linear)
             : base(actor, timeInMs, destination, relative, callback, loopType, easingType)
         {
-            origin = previous = actor.Transform3D.Translation;
-
             if (relative)
                 base.destination += actor.Transform3D.Translation;
         }
@@ -139,6 +161,12 @@ namespace GDGame.MyGame.Utilities
 
             return false;
         }
+
+        protected override void Reset()
+        {
+            origin = previous = Actor.Transform3D.Translation;
+        }
+
         #endregion
 
         #region Equals & GetHashCode Overrides
@@ -164,8 +192,6 @@ namespace GDGame.MyGame.Utilities
         public ScaleTween(Actor3D actor, int timeInMs, Vector3 destination, bool relative, Action<Actor3D> callback = null, LoopType loopType = LoopType.PlayOnce, EasingType easingType = EasingType.linear)
             : base(actor, timeInMs, destination, relative, callback, loopType, easingType)
         {
-            origin = previous = actor.Transform3D.Scale;
-
             if (relative)
                 base.destination += actor.Transform3D.Scale;
         }
@@ -189,6 +215,12 @@ namespace GDGame.MyGame.Utilities
 
             return false;
         }
+
+        protected override void Reset()
+        {
+            origin = previous = Actor.Transform3D.Scale;
+        }
+
         #endregion
 
         #region Equals & GetHashCode Overrides
@@ -214,8 +246,6 @@ namespace GDGame.MyGame.Utilities
         public RotationTween(Actor3D actor, int timeInMs, Vector3 destination, bool relative, Action<Actor3D> callback = null, LoopType loopType = LoopType.PlayOnce, EasingType easingType = EasingType.linear)
             : base(actor, timeInMs, destination, relative, callback, loopType, easingType)
         {
-            origin = previous = actor.Transform3D.RotationInDegrees;
-
             if (relative)
                 base.destination += actor.Transform3D.RotationInDegrees;
         }
@@ -239,6 +269,12 @@ namespace GDGame.MyGame.Utilities
 
             return false;
         }
+
+        protected override void Reset()
+        {
+            origin = previous = Actor.Transform3D.RotationInDegrees;
+        }
+
         #endregion
 
         #region Equals & GetHashCode Overrides

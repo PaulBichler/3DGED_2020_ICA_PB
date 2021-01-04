@@ -909,6 +909,39 @@ namespace GDGame
                 transform3D, effectParameters, vertexData,
                 new BoxCollisionPrimitive(transform3D), objectManager
             );
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region Projectile
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedPyramid(out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            CollidableProjectile projectile = new CollidableProjectile(
+                "Projectile",
+                ActorType.Projectile, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData,
+                new BoxCollisionPrimitive(transform3D), objectManager
+            );
+            archetypeDictionary.Add(projectile.ID, projectile);
+            #endregion
+
+            #region Shooter
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedOctahedron(out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            collidable = new CollidablePrimitiveObject(
+                "Shooter",
+                ActorType.Shooter, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData,
+                new BoxCollisionPrimitive(transform3D), objectManager
+            );
+            //collidable.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController, projectile, 5f, 500));
             archetypeDictionary.Add(collidable.ID, collidable); 
             #endregion
         }
@@ -967,39 +1000,7 @@ namespace GDGame
         /// </summary>
         private void InitDecorators()
         {
-            //clone the archetypal pyramid
-            PrimitiveObject drawnActor3D
-                = archetypeDictionary[GameConstants.Primitive_LitTexturedPyramid].Clone() as PrimitiveObject;
-
-            //change it a bit
-            drawnActor3D.ID = "pyramid1";
-            drawnActor3D.Transform3D.Scale = 10 * new Vector3(1, 1, 1);
-            drawnActor3D.Transform3D.RotationInDegrees = new Vector3(0, 0, 0);
-            drawnActor3D.Transform3D.Translation = new Vector3(0, 10, 0);
-            drawnActor3D.EffectParameters.Alpha = 0.5f;
-
-            //lets add a rotation controller so we can see all sides easily
-            drawnActor3D.ControllerList.Add(
-                new RotationController("rot controller1", ControllerType.RotationOverTime,
-                1, new Vector3(0, 1, 0)));
-
-            //drawnActor3D.ControllerList.Add(
-            //   new RotationController("rot controller2", ControllerType.RotationOverTime,
-            //   2, new Vector3(1, 0, 0)));
-
-            //finally add it into the objectmanager after SIX(!) steps
-            objectManager.Add(drawnActor3D);
-
-
-            drawnActor3D = archetypeDictionary[GameConstants.Primitive_LitTexturedOctahedron].Clone() as PrimitiveObject;
-            drawnActor3D.Transform3D.Scale = 10 * new Vector3(1, 1, 1);
-            drawnActor3D.Transform3D.Translation = new Vector3(10, 8, 0);
-            objectManager.Add(drawnActor3D);
-
-            drawnActor3D = archetypeDictionary[GameConstants.Primitive_LitTexturedTest].Clone() as PrimitiveObject;
-            drawnActor3D.Transform3D.Scale = 10 * new Vector3(1, 1, 1);
-            drawnActor3D.Transform3D.Translation = new Vector3(40, 8, 0);
-            objectManager.Add(drawnActor3D);
+            
         }
 
         private void InitHelpers()

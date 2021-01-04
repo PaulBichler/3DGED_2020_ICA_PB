@@ -27,13 +27,13 @@ namespace GDGame.MyGame.Managers
                     tweensToRemove.Add(tween);
         }
 
-        private List<T> GetActorTweens<T>(Actor3D actor)
+        private List<Tween> GetActorTweens(Actor3D actor)
         {
-            List<T> tweens = new List<T>();
+            List<Tween> tweens = new List<Tween>();
 
             foreach (Tween tween in this.tweens)
-                if(tween.Actor.Equals(actor) && tween is T target)
-                    tweens.Add(target);
+                if(tween.Actor.Equals(actor))
+                    tweens.Add(tween);
 
             return tweens;
         }
@@ -84,15 +84,16 @@ namespace GDGame.MyGame.Managers
                 switch (eventData.EventActionType)
                 {
                     case EventActionType.OnAdd:
-                        AddTween(eventData.Parameters[0] as Tween);
+                        foreach (object parameter in eventData.Parameters)
+                            AddTween(parameter as Tween);
                         break;
                     case EventActionType.OnAddChild:
-                        tweensFound = GetActorTweens<Tween>(eventData.Parameters[0] as Actor3D);
+                        tweensFound = GetActorTweens(eventData.Parameters[0] as Actor3D);
                         foreach (var tween in tweensFound)
                             tween.AddChild(eventData.Parameters[1] as Actor3D);
                         break;
                     case EventActionType.OnRemoveChild:
-                        tweensFound = GetActorTweens<Tween>(eventData.Parameters[0] as Actor3D);
+                        tweensFound = GetActorTweens(eventData.Parameters[0] as Actor3D);
                         foreach (var tween in tweensFound)
                             tween.RemoveChild(eventData.Parameters[1] as Actor3D);
                         break;
