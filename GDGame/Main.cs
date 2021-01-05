@@ -941,8 +941,23 @@ namespace GDGame
                 transform3D, effectParameters, vertexData,
                 new BoxCollisionPrimitive(transform3D), objectManager
             );
-            //collidable.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController, projectile, 5f, 500));
-            archetypeDictionary.Add(collidable.ID, collidable); 
+            archetypeDictionary.Add(collidable.ID, collidable);
+            #endregion
+
+            #region Star Pickup
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
+                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
+                textureDictionary["checkerboard"], Color.White, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedSpikedCube(out primitiveType, out primitiveCount);
+            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            CollidablePickupObject pickup = new CollidablePickupObject(
+                "Star Pickup",
+                ActorType.CollidablePickup, StatusType.Drawn | StatusType.Update,
+                transform3D, effectParameters, vertexData,
+                new BoxCollisionPrimitive(transform3D), objectManager, new PickupParameters("Star Pickup", 1f)
+            );
+            archetypeDictionary.Add(pickup.ID, pickup); 
             #endregion
         }
 

@@ -7,8 +7,11 @@ using System.Collections.Generic;
 using GDGame;
 using GDGame.MyGame.Actors;
 using GDGame.MyGame.Controllers;
+using GDGame.MyGame.Enums;
 using GDGame.MyGame.Managers;
+using GDGame.MyGame.Utilities;
 using GDLibrary.Enums;
+using GDLibrary.Events;
 using GDLibrary.Parameters;
 
 namespace GDLibrary.Utilities
@@ -237,14 +240,33 @@ namespace GDLibrary.Utilities
 
             if (color.Equals(new Color(255, 50, 255)))
             {
+                #region Shooter
                 CollidablePrimitiveObject archetype = archetypeDictionary["Shooter"] as CollidablePrimitiveObject;
                 CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
 
                 drawnActor3D.ID = "Shooter " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
-                drawnActor3D.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController, 
+                drawnActor3D.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController,
                     archetypeDictionary["Projectile"] as CollidableProjectile, 5f, 500));
-                return drawnActor3D; 
+                return drawnActor3D;  
+                #endregion
+            }
+
+            if (color.Equals(new Color(255, 150, 0)))
+            {
+                #region Star Pickup
+                CollidablePrimitiveObject archetype = archetypeDictionary["Star Pickup"] as CollidablePrimitiveObject;
+                CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
+
+                drawnActor3D.ID = "Star Pickup " + count++;
+                drawnActor3D.Transform3D.Translation = translation;
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[]
+                {
+                    new RotationTween(drawnActor3D, 1000, new Vector3(0, 90, 0), true, null, LoopType.Repeat),
+                    new TranslationTween(drawnActor3D, 1000, Vector3.Up * 0.25f, true, null, LoopType.ReverseAndRepeat, EasingType.easeOut)
+                }));
+                return drawnActor3D;  
+                #endregion
             }
 
             return null;
