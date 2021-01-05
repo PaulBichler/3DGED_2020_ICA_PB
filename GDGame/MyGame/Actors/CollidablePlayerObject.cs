@@ -1,5 +1,4 @@
 ﻿using GDGame;
-using GDGame.MyGame.Actors;
 using GDGame.MyGame.Enums;
 using GDGame.MyGame.Utilities;
 using GDLibrary.Actors;
@@ -94,9 +93,9 @@ namespace GDLibrary
                 }
                 else if (collidee.ActorType == ActorType.CollidablePickup)
                 {
-                    //remove the object
-                    object[] parameters = { collidee };
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, parameters));
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStarPickup, null));
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new [] { collidee }));
+                    Collidee = null;
                 }
             }
         }

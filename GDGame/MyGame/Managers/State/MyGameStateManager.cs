@@ -18,6 +18,7 @@ namespace GDLibrary.Core.Managers.State
         private CameraManager<Camera3D> cameraManager;
         private LevelManager levelManager;
         private Actor3D player;
+        private int stars;
 
         public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager, LevelManager levelManager) : base(game, statusType)
         {
@@ -53,6 +54,10 @@ namespace GDLibrary.Core.Managers.State
                         //get a reference to the player to set the target in the follow camera
                         player = eventData.Parameters[0] as Actor3D;
                         (cameraManager[2].ControllerList.Find(controller => controller is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
+                        break;
+                    case EventActionType.OnPickup:
+                        stars++;
+                        System.Diagnostics.Debug.WriteLine("Picked up a star!");
                         break;
                 }
             }

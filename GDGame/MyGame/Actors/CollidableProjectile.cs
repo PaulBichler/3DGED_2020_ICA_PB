@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using GDGame.MyGame.Utilities;
+﻿using GDGame.MyGame.Utilities;
 using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
@@ -8,7 +7,7 @@ using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using Microsoft.Xna.Framework;
 
-namespace GDGame.MyGame.Actors
+namespace GDLibrary
 {
     public class CollidableProjectile : CollidablePrimitiveObject
     {
@@ -26,12 +25,12 @@ namespace GDGame.MyGame.Actors
         {
             if (collidee == null) return;
 
-            if (collidee.ActorType == ActorType.PC || collidee.ActorType == ActorType.BlockingObstacle)
+            if (collidee.ActorType == ActorType.PC || collidee.ActorType == ActorType.BlockingObstacle || collidee.ActorType == ActorType.Obstacle)
             {
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveActor, new [] { this }));
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []
                 {
-                    new ScaleTween(this, 500, Vector3.Zero, false, 
+                    new ScaleTween(this, 100, Vector3.Zero, false, 
                         actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new []{ this }))) 
                 }));
             }

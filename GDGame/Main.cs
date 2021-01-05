@@ -913,8 +913,8 @@ namespace GDGame
             #endregion
 
             #region Projectile
-            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+            transform3D = new Transform3D(Vector3.Zero, new Vector3(90, 0, 0), 
+                    Vector3.One / 2, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["checkerboard"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedPyramid(out primitiveType, out primitiveCount);

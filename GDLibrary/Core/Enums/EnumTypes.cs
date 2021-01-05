@@ -216,6 +216,7 @@
         //add more here...
 
         OnAddChild,
-        OnRemoveChild
+        OnRemoveChild,
+        OnStarPickup
     }
 }
