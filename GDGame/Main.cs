@@ -193,6 +193,7 @@ namespace GDGame
             textureDictionary.Load("Assets/Textures/GameObjects/WaterPlatform");
             textureDictionary.Load("Assets/Textures/GameObjects/ObstacleSpawner");
             textureDictionary.Load("Assets/Textures/GameObjects/White");
+            textureDictionary.Load("Assets/Textures/GameObjects/Player");
         }
 
         private void LoadFonts()
@@ -791,7 +792,7 @@ namespace GDGame
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     new Vector3(0.8f, 0.8f, 0.8f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["Player"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             CollidablePlayerObject player = new CollidablePlayerObject(
@@ -899,7 +900,7 @@ namespace GDGame
 
             #region Blocking Obstacle
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+                    new Vector3(1, 0.5f, 1), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["BlockingObstacle"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);

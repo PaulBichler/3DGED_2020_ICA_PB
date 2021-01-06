@@ -236,7 +236,7 @@ namespace GDLibrary.Utilities
                 CollidablePrimitiveObject drawnActor3D = archetype.Clone() as CollidablePrimitiveObject;
 
                 drawnActor3D.ID = "Blocking Obstacle " + count++;
-                drawnActor3D.Transform3D.Translation = translation;
+                drawnActor3D.Transform3D.Translation = translation + new Vector3(0, -0.25f, 0);
                 return drawnActor3D; 
                 #endregion
             }
