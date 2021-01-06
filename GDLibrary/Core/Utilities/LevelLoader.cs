@@ -246,8 +246,8 @@ namespace GDLibrary.Utilities
 
                 drawnActor3D.ID = "Shooter " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
-                drawnActor3D.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController,
-                    archetypeDictionary["Projectile"] as CollidableProjectile, 5f, 500));
+                //drawnActor3D.ControllerList.Add(new ShootingController("Shooting Controller", ControllerType.ShootingController,
+                //    archetypeDictionary["Projectile"] as CollidableProjectile, 5f, 500));
                 return drawnActor3D;  
                 #endregion
             }

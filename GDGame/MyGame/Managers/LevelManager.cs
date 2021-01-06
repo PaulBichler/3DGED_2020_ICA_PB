@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GDLibrary.Actors;
 using GDLibrary.Managers;
+using GDLibrary.Parameters;
 using GDLibrary.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,17 +13,24 @@ namespace GDGame.MyGame.Managers
     {
         public string Name;
         public List<Texture2D> LevelLayerTextures;
+        public Transform3DCurve StartCameraCurve;
         public float xScale, zScale, LayerHeightOffset;
         public Vector3 Offset;
     }
 
     public class LevelManager
     {
+        #region Fields
         private ObjectManager objectManager;
         private Dictionary<string, LevelInfo> levels;
+        #endregion
 
+        #region Properties
+        public LevelInfo currentLevel { get; private set; }
         public LevelLoader<PrimitiveObject> LevelLoader { get; set; }
+        #endregion
 
+        #region Constructor & Core
         public LevelManager(ObjectManager objectManager)
         {
             this.objectManager = objectManager;
@@ -31,13 +39,13 @@ namespace GDGame.MyGame.Managers
 
         public void AddLevel(string ID, LevelInfo level)
         {
-            if(!levels.ContainsKey(ID))
+            if (!levels.ContainsKey(ID))
                 levels.Add(ID, level);
         }
 
         public void LoadLevel(string ID)
         {
-            if(!levels.ContainsKey(ID))
+            if (!levels.ContainsKey(ID))
                 throw new ArgumentException("No Level with ID: " + ID + " found!");
 
             LoadLevel(levels[ID]);
@@ -61,6 +69,9 @@ namespace GDGame.MyGame.Managers
                 this.objectManager.Add(actorList);
                 heightOffset += level.LayerHeightOffset;
             }
-        }
+
+            currentLevel = level;
+        } 
+        #endregion
     }
 }

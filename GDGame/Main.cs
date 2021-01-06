@@ -235,12 +235,12 @@ namespace GDGame
             //add archetypes that can be cloned
             InitArchetypes();
 
-            //drawn content (collidable and noncollidable together - its simpler)
-            InitLevel(worldScale);
-
             //curves and rails used by cameras
             InitCurves();
             InitRails();
+
+            //drawn content (collidable and noncollidable together - its simpler)
+            InitLevel(worldScale);
 
             //cameras - notice we moved the camera creation BELOW where we created the drawn content - see DriveController
             InitCameras3D();
@@ -483,15 +483,16 @@ namespace GDGame
         private void InitCurves()
         {
             //create the camera curve to be applied to the track controller
-            Transform3DCurve curveA = new Transform3DCurve(CurveLoopType.Oscillate); //experiment with other CurveLoopTypes
-            curveA.Add(new Vector3(0, 5, 100), -Vector3.UnitZ, Vector3.UnitY, 0); //start
-            curveA.Add(new Vector3(0, 5, 80), new Vector3(1, 0, -1), Vector3.UnitY, 1000); //start position
-            curveA.Add(new Vector3(0, 5, 50), -Vector3.UnitZ, Vector3.UnitY, 3000); //start position
-            curveA.Add(new Vector3(0, 5, 20), new Vector3(-1, 0, -1), Vector3.UnitY, 4000); //start position
-            curveA.Add(new Vector3(0, 5, 10), -Vector3.UnitZ, Vector3.UnitY, 6000); //start position
+            Transform3DCurve curveA = new Transform3DCurve(CurveLoopType.Oscillate);
+            curveA.Add(new Vector3(25f, 10, 60), new Vector3(0, -0.6f, -0.8f), new Vector3(0, 0.8f, -0.6f), 0);
+            curveA.Add(new Vector3(-0.5f, 10, 34), new Vector3(1f, -0.2f, 0f), new Vector3(0, 1f, 0), 2000);
+            curveA.Add(new Vector3(50, 10, 26), new Vector3(-1f, -0.1f, -0.3f), new Vector3(-0.1f, 1f, 0), 4000);
+            curveA.Add(new Vector3(-0.5f, 10, 10), new Vector3(1f, -0.1f, -0.2f), new Vector3(0.1f, 1f, 0), 6000);
+            curveA.Add(new Vector3(25f, 10, -9), new Vector3(0, -0.4f, 1f), new Vector3(0, 0.9f, 0.4f), 7000);
+            curveA.Add(new Vector3(25f, 10, 60), new Vector3(0, -0.6f, -0.8f), new Vector3(0, 0.8f, -0.6f), 9000);
 
             //add to the dictionary
-            transform3DCurveDictionary.Add("headshake1", curveA);
+            transform3DCurveDictionary.Add("Start Camera Curve", curveA);
         }
 
         private void InitRails()
@@ -583,6 +584,35 @@ namespace GDGame
             Camera3D camera3D = null;
             Viewport viewPort = new Viewport(0, 0, 1024, 768);
 
+            #region Noncollidable Camera - Curve3D
+
+            //notice that it doesnt matter what translation, look, and up are since curve will set these
+            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero, Vector3.Zero);
+
+            //Curve3DController is added in the game state manager
+            camera3D = new Camera3D(GameConstants.Camera_NonCollidableCurveMainArena,
+              ActorType.Camera3D, StatusType.Update, transform3D,
+                        ProjectionParameters.StandardDeepSixteenTen, viewPort);
+
+            cameraManager.Add(camera3D);
+
+            #endregion Noncollidable Camera - Curve3D
+
+            #region Player Follow Camera
+            transform3D = new Transform3D(Vector3.Zero, -Vector3.Forward, Vector3.Up);
+            camera3D = new Camera3D(GameConstants.Camera_PlayerFollowCamera,
+                ActorType.Camera3D, StatusType.Update, transform3D,
+                ProjectionParameters.StandardDeepSixteenTen, viewPort);
+
+            camera3D.ControllerList.Add(new PlayerFollowCameraController(
+                GameConstants.Controllers_CameraFollowPlayer,
+                ControllerType.FollowCamera,
+                null, GameConstants.PlayerFollowCamera_ElevationAngle, 
+                GameConstants.PlayerFollowCamera_DistanceToPlayer));
+
+            cameraManager.Add(camera3D); 
+            #endregion
+
             #region Noncollidable Camera - Flight
 
             transform3D = new Transform3D(new Vector3(10, 10, 20),
@@ -603,39 +633,6 @@ namespace GDGame
             cameraManager.Add(camera3D);
 
             #endregion Noncollidable Camera - Flight
-
-            #region Noncollidable Camera - Curve3D
-
-            //notice that it doesnt matter what translation, look, and up are since curve will set these
-            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero, Vector3.Zero);
-
-            camera3D = new Camera3D(GameConstants.Camera_NonCollidableCurveMainArena,
-              ActorType.Camera3D, StatusType.Update, transform3D,
-                        ProjectionParameters.StandardDeepSixteenTen, viewPort);
-
-            camera3D.ControllerList.Add(
-                new Curve3DController(GameConstants.Controllers_NonCollidableCurveMainArena,
-                ControllerType.Curve,
-                        transform3DCurveDictionary["headshake1"])); //use the curve dictionary to retrieve a transform3DCurve by id
-
-            cameraManager.Add(camera3D);
-
-            #endregion Noncollidable Camera - Curve3D
-
-            #region Player Follow Camera
-            transform3D = new Transform3D(Vector3.Zero, -Vector3.Forward, Vector3.Up);
-            camera3D = new Camera3D(GameConstants.Camera_PlayerFollowCamera,
-                ActorType.Camera3D, StatusType.Update, transform3D,
-                ProjectionParameters.StandardDeepSixteenTen, viewPort);
-
-            camera3D.ControllerList.Add(new PlayerFollowCameraController(
-                GameConstants.Controllers_CameraFollowPlayer,
-                ControllerType.FollowCamera,
-                null, GameConstants.PlayerFollowCamera_ElevationAngle, 
-                GameConstants.PlayerFollowCamera_DistanceToPlayer));
-
-            cameraManager.Add(camera3D); 
-            #endregion
 
             cameraManager.ActiveCameraIndex = 0; //0, 1, 2, 3
         }
@@ -988,6 +985,7 @@ namespace GDGame
             {
                 Name = "Level 1",
                 LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1"], textureDictionary["level_1_2"] },
+                StartCameraCurve = transform3DCurveDictionary["Start Camera Curve"],
                 xScale = 1,
                 zScale = 1,
                 LayerHeightOffset = 1,
@@ -1001,6 +999,7 @@ namespace GDGame
             {
                 Name = "Level 2",
                 LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1"], textureDictionary["level_1_2"] },
+                StartCameraCurve = transform3DCurveDictionary["Start Camera Curve"],
                 xScale = 1,
                 zScale = 1,
                 LayerHeightOffset = 1,

@@ -42,8 +42,10 @@ namespace GDLibrary.Debug
             //start the sprite batch draw and set any initial modes
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend/*bug fix black background on drawn text*/, null, null, null);
 
-            spriteBatch.DrawString(spriteFont, "Camera ID:" + cameraManager.ActiveCamera.ID, new Vector2(10, 10), Color.White);
-            spriteBatch.DrawString(spriteFont, "Camera[translation]:" + cameraManager.ActiveCamera.Transform3D.Translation, new Vector2(10, 30), Color.White);
+            spriteBatch.DrawString(spriteFont, "Camera ID:" + cameraManager.ActiveCamera.ID, new Vector2(10, 10), Color.Red);
+            spriteBatch.DrawString(spriteFont, "Camera[translation]:" + cameraManager.ActiveCamera.Transform3D.Translation, new Vector2(10, 30), Color.Red);
+            spriteBatch.DrawString(spriteFont, "Camera[Look]:" + cameraManager.ActiveCamera.Transform3D.Look, new Vector2(10, 50), Color.Red);
+            spriteBatch.DrawString(spriteFont, "Camera[Up]:" + cameraManager.ActiveCamera.Transform3D.Up, new Vector2(10, 70), Color.Red);
 
             //end the sprite batch draw
             spriteBatch.End();

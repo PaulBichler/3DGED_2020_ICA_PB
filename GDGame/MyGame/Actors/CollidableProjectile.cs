@@ -28,11 +28,12 @@ namespace GDLibrary
             if (collidee.ActorType == ActorType.PC || collidee.ActorType == ActorType.BlockingObstacle || collidee.ActorType == ActorType.Obstacle)
             {
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveActor, new [] { this }));
-                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []
-                {
-                    new ScaleTween(this, 100, Vector3.Zero, false, 
-                        actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new []{ this }))) 
-                }));
+                EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new[] { this }));
+                //EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new[]
+                //{
+                //    new ScaleTween(this, 100, Vector3.Zero, false,
+                //        actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new []{ this })))
+                //}));
             }
         }
 
