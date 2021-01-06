@@ -87,6 +87,7 @@ namespace GDLibrary.Utilities
         private int count = 1;
         MovingObstacleSpawner obstacleSpawner;
         List<Actor3D> movingObstacles = new List<Actor3D>();
+        Random rand = new Random();
 
         private DrawnActor3D GetObjectFromColor(Color color, Vector3 translation, Texture2D texture, int x)
         {
@@ -220,6 +221,8 @@ namespace GDLibrary.Utilities
 
                 drawnActor3D.ID = "Obstacle " + count++;
                 drawnActor3D.Transform3D.Translation = translation;
+                //Apply Random color
+                drawnActor3D.EffectParameters.DiffuseColor = new Color(rand.Next(256), rand.Next(256), rand.Next(256));
 
                 movingObstacles.Add(drawnActor3D);
                 return drawnActor3D; 

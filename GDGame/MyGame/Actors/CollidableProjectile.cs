@@ -1,5 +1,4 @@
-﻿using GDGame.MyGame.Utilities;
-using GDLibrary.Actors;
+﻿using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
 using GDLibrary.Interfaces;
@@ -27,7 +26,7 @@ namespace GDLibrary
 
             if (collidee.ActorType == ActorType.PC || collidee.ActorType == ActorType.BlockingObstacle || collidee.ActorType == ActorType.Obstacle)
             {
-                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveActor, new [] { this }));
+                EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveActor, new[] { this }));
                 EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new[] { this }));
                 //EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new[]
                 //{

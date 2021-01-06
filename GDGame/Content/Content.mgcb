@@ -178,6 +178,18 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/Foliage/Trees/tree5.png
 
+#begin Assets/Textures/GameObjects/BlockingObstacle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Textures/GameObjects/BlockingObstacle.png
+
 #begin Assets/Textures/GameObjects/Grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -189,6 +201,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/GameObjects/Grass.png
+
+#begin Assets/Textures/GameObjects/ObstacleSpawner.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Textures/GameObjects/ObstacleSpawner.png
 
 #begin Assets/Textures/GameObjects/Road.png
 /importer:TextureImporter
@@ -202,6 +226,18 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/GameObjects/Road.png
 
+#begin Assets/Textures/GameObjects/Star.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Textures/GameObjects/Star.png
+
 #begin Assets/Textures/GameObjects/Water.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -213,6 +249,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/GameObjects/Water.png
+
+#begin Assets/Textures/GameObjects/WaterPlatform.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Textures/GameObjects/WaterPlatform.png
+
+#begin Assets/Textures/GameObjects/White.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Assets/Textures/GameObjects/White.png
 
 #begin Assets/Textures/Level/level_1.png
 /importer:TextureImporter

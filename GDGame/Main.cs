@@ -188,6 +188,11 @@ namespace GDGame
             textureDictionary.Load("Assets/Textures/GameObjects/Grass");
             textureDictionary.Load("Assets/Textures/GameObjects/Water");
             textureDictionary.Load("Assets/Textures/GameObjects/Road");
+            textureDictionary.Load("Assets/Textures/GameObjects/Star");
+            textureDictionary.Load("Assets/Textures/GameObjects/BlockingObstacle");
+            textureDictionary.Load("Assets/Textures/GameObjects/WaterPlatform");
+            textureDictionary.Load("Assets/Textures/GameObjects/ObstacleSpawner");
+            textureDictionary.Load("Assets/Textures/GameObjects/White");
         }
 
         private void LoadFonts()
@@ -790,8 +795,7 @@ namespace GDGame
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             CollidablePlayerObject player = new CollidablePlayerObject(
-                GameConstants.Player, ActorType.PC,
-                StatusType.Drawn | StatusType.Update,
+                GameConstants.Player, ActorType.PC, StatusType.Drawn,
                 transform3D, effectParameters, vertexData, 
                 new BoxCollisionPrimitive(transform3D, Vector3.One / 2), objectManager,
                 new[] { Keys.Up, Keys.Down, Keys.Left, Keys.Right }, keyboardManager);
@@ -850,7 +854,7 @@ namespace GDGame
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     Vector3.One, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["ObstacleSpawner"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             MovingObstacleSpawner obstacleSpawner = new MovingObstacleSpawner(
@@ -865,7 +869,7 @@ namespace GDGame
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     Vector3.One / 2, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["White"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
@@ -881,7 +885,7 @@ namespace GDGame
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     new Vector3(.9f, .9f, .9f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["WaterPlatform"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
@@ -897,7 +901,7 @@ namespace GDGame
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     Vector3.One, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["BlockingObstacle"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
@@ -945,7 +949,7 @@ namespace GDGame
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
                     Vector3.One, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["Star"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedSpikedCube(out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             CollidablePickupObject pickup = new CollidablePickupObject(
