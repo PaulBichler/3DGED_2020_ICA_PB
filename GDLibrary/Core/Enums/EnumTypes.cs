@@ -8,7 +8,8 @@
         Alarm,
         Jump,
         Shoot,
-        Pickup
+        Pickup,
+        Soundtrack
     }
 
     /// <summary>

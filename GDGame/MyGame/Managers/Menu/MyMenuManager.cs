@@ -108,7 +108,7 @@ namespace GDGame.MyGame.Managers
 
         protected override void HandleKeyboard(GameTime gameTime)
         {
-            if (this.keyboardManager.IsFirstKeyPress(Microsoft.Xna.Framework.Input.Keys.M))
+            if (this.keyboardManager.IsFirstKeyPress(Microsoft.Xna.Framework.Input.Keys.Escape))
             {
                 if (this.StatusType == StatusType.Off)
                 {

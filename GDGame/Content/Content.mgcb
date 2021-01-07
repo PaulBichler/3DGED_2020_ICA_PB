@@ -61,6 +61,12 @@
 /processorParam:Quality=Best
 /build:Assets/Audio/Effects/WinSound.wav
 
+#begin Assets/Audio/Music/InGameMusic.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Music/InGameMusic.wav
+
 #begin Assets/Demo/Textures/checkerboard.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -7,12 +7,15 @@ namespace GDGame
         #region Common
 
         private static readonly float strafeSpeedMultiplier = 0.75f;
-        public static readonly Keys[] KeysOne = { Keys.W, Keys.S, Keys.A, Keys.D };
-        public static readonly Keys[] KeysTwo = { Keys.U, Keys.J, Keys.H, Keys.K };
+        public static readonly Keys[] KeysOne = {Keys.W, Keys.S, Keys.A, Keys.D};
+
+        public static readonly Keys[] KeysTwo = {Keys.U, Keys.J, Keys.H, Keys.K};
         //   public static readonly Keys[] KeysThree = { Keys.U, Keys.J, Keys.H, Keys.K };
+
         #endregion Common
 
         #region String IDs
+
         public static readonly string Primitive_WireframeOriginHelper = "wireframe origin helper";
         public static readonly string Primitive_UnlitTexturedQuad = "unlit textured quad";
         public static readonly string Primitive_LitTexturedQuad = "lit textured quad";
@@ -39,19 +42,25 @@ namespace GDGame
         public static readonly string Controllers_NonCollidableSecurity = "pan controller";
         public static readonly string Controllers_NonCollidableCurveMainArena = "main arena - fly through - 1";
         public static readonly string Controllers_CameraFollowPlayer = "Camera Follow Player Controller";
+
         #endregion String IDs
 
         #region Player Follow Camera
+
         public static readonly float PlayerFollowCamera_ElevationAngle = 50f;
-        public static readonly float PlayerFollowCamera_DistanceToPlayer = 15f; 
+        public static readonly float PlayerFollowCamera_DistanceToPlayer = 15f;
+
         #endregion
 
         #region Collidable First Person Camera
 
-        public static readonly Keys[] CameraMoveKeys = { Keys.W, Keys.S, Keys.A, Keys.D, //F,B,L,R
-                                        Keys.Space, //Jump
-                                        Keys.C, //Crouch
-                                        Keys.LeftShift, Keys.RightShift}; //Other
+        public static readonly Keys[] CameraMoveKeys =
+        {
+            Keys.W, Keys.S, Keys.A, Keys.D, //F,B,L,R
+            Keys.Space, //Jump
+            Keys.C, //Crouch
+            Keys.LeftShift, Keys.RightShift
+        }; //Other
 
         //JigLib related collidable camera properties
         public static readonly float CollidableCameraJumpHeight = 15;
@@ -88,6 +97,12 @@ namespace GDGame
         public static readonly float hiAngularSpeed = mediumAngularSpeed * angularSpeedMultiplier;
 
         #endregion Security Camera
+
+        #region Sound Controls
+        public static readonly Keys[] SoundControlKeys = {
+            Keys.N, Keys.B, Keys.M
+        }; 
+        #endregion
 
         public static readonly int Player_MovementTimeInMs = 300;
 

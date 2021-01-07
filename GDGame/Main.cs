@@ -129,6 +129,9 @@ namespace GDGame
                 Content.Load<SoundEffect>("Assets/Audio/Effects/LoseSound"), SoundCategoryType.WinLose, Vector3.One, false));
             soundManager.Add(new GDLibrary.Managers.Cue("win", 
                 Content.Load<SoundEffect>("Assets/Audio/Effects/WinSound"), SoundCategoryType.WinLose, Vector3.One, false));
+
+            soundManager.Add(new GDLibrary.Managers.Cue("music1", 
+                Content.Load<SoundEffect>("Assets/Audio/Music/InGameMusic"), SoundCategoryType.Soundtrack, Vector3.One, true));
         }
 
         private void LoadEffects()
@@ -268,6 +271,9 @@ namespace GDGame
             InitDebug();
 #endif
             #endregion Debug
+
+            //Start the music
+            EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new [] { "music1" }));
 
             base.Initialize();
         }
@@ -1133,10 +1139,16 @@ namespace GDGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (keyboardManager.IsFirstKeyPress(Keys.Escape))
-            {
-                Exit();
-            }
+            //if (keyboardManager.IsFirstKeyPress(Keys.Escape))
+            //    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
+
+            if (keyboardManager.IsFirstKeyPress(GameConstants.SoundControlKeys[2]))
+                soundManager.SetMasterVolume(0);
+            else if(keyboardManager.IsFirstKeyPress(GameConstants.SoundControlKeys[0]))
+                soundManager.ChangeMasterVolume(.1f);
+            else if(keyboardManager.IsFirstKeyPress(GameConstants.SoundControlKeys[1]))
+                soundManager.ChangeMasterVolume(-.1f);
+
             #region Demo
 #if DEMO
 
