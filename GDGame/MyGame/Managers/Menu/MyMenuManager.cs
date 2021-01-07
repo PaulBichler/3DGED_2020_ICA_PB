@@ -10,14 +10,12 @@ namespace GDGame.MyGame.Managers
     public class MyMenuManager : MenuManager
     {
         private MouseManager mouseManager;
-        private KeyboardManager keyboardManager;
 
         public MyMenuManager(Game game, StatusType statusType, SpriteBatch spriteBatch,
-            MouseManager mouseManager, KeyboardManager keyboardManager)
+            MouseManager mouseManager)
             : base(game, statusType, spriteBatch)
         {
             this.mouseManager = mouseManager;
-            this.keyboardManager = keyboardManager;
         }
 
         public override void HandleEvent(EventData eventData)
@@ -40,6 +38,10 @@ namespace GDGame.MyGame.Managers
                     case EventActionType.OnWin:
                         SetScene("win");
                         //sending new event since other managers are also handling pause
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
+                        break;
+                    case EventActionType.OnPauseGame:
+                        SetScene("pause");
                         EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
                         break;
                 }
@@ -92,37 +94,25 @@ namespace GDGame.MyGame.Managers
                 case "play":
                     EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart,  new []{ "Level 1" }));
                     break;
-
+                case "resume":
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
+                    break;
                 case "controls":
                     this.SetScene("controls");
                     break;
-
                 case "exit":
-                    this.Game.Exit();
+                    Game.Exit();
                     break;
-
+                case "tomenu":
+                    SetScene("main");
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnLeaveGame, null));
+                    break;
+                case "levelselect":
+                    SetScene("levelselect");
+                    break;
                 default:
                     break;
             }
-        }
-
-        protected override void HandleKeyboard(GameTime gameTime)
-        {
-            if (this.keyboardManager.IsFirstKeyPress(Microsoft.Xna.Framework.Input.Keys.Escape))
-            {
-                if (this.StatusType == StatusType.Off)
-                {
-                    //show menu
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-                }
-                else
-                {
-                    //show game
-                    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
-                }
-            }
-
-            base.HandleKeyboard(gameTime);
         }
     }
 }

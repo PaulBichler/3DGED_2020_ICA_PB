@@ -208,7 +208,7 @@ namespace GDLibrary.Managers
                     listener.Position = listenerTransform.Translation;
                     Play3D(eventData.Parameters[0] as string, listener, emitter);
                     break;
-                case EventActionType.SetListener:
+                case EventActionType.OnSetListener:
                     listenerTransform = eventData.Parameters[0] as Transform3D;
                     break;
             }

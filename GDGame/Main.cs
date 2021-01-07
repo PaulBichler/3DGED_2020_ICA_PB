@@ -164,8 +164,6 @@ namespace GDGame
         private void LoadTextures()
         {
             //level 1 where each image 1_1, 1_2 is a different Y-axis height specificied when we use the level loader
-            textureDictionary.Load("Assets/Textures/Level/level1_1");
-            textureDictionary.Load("Assets/Textures/Level/level1_2");
             textureDictionary.Load("Assets/Textures/Level/level_1");
             textureDictionary.Load("Assets/Textures/Level/level_1_2");
             //add more levels here...
@@ -194,6 +192,11 @@ namespace GDGame
             textureDictionary.Load("Assets/Textures/UI/Backgrounds/controlsmenu");
             textureDictionary.Load("Assets/Textures/UI/Backgrounds/exitmenu");
             textureDictionary.Load("Assets/Textures/UI/Backgrounds/exitmenuwithtrans");
+
+            textureDictionary.Load("Assets/Textures/UI/Other/MainMenuTitle");
+            textureDictionary.Load("Assets/Textures/UI/Other/PauseMenuTitle");
+            textureDictionary.Load("Assets/Textures/UI/Other/LoseScreenTitle");
+            textureDictionary.Load("Assets/Textures/UI/Other/WinScreenTitle");
 
             //ui
             textureDictionary.Load("Assets/Textures/UI/Controls/reticuleDefault");
@@ -393,20 +396,25 @@ namespace GDGame
         private void InitMenu()
         {
             Texture2D texture = null;
+            Integer2 imageDimensions = null;
             Transform2D transform2D = null;
             DrawnActor2D uiObject = null;
             Vector2 fullScreenScaleFactor = Vector2.One;
+            Vector2 origin = Vector2.Zero;
 
             #region All Menu Background Images
             //background main
-            texture = textureDictionary["exitmenuwithtrans"];
+            texture = textureDictionary["Player"];
             fullScreenScaleFactor = new Vector2((float)_graphics.PreferredBackBufferWidth / texture.Width, (float)_graphics.PreferredBackBufferHeight / texture.Height);
 
             transform2D = new Transform2D(fullScreenScaleFactor);
             uiObject = new UITextureObject("main_bckgnd", ActorType.UITextureObject, StatusType.Drawn,
-                transform2D, Color.LightGreen, 1, SpriteEffects.None, texture,
-                new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height));
             menuManager.Add("main", uiObject);
+            menuManager.Add("pause", uiObject);
+            menuManager.Add("lose", uiObject);
+            menuManager.Add("win", uiObject);
 
             //background audio
             texture = textureDictionary["audiomenu"];
@@ -432,49 +440,41 @@ namespace GDGame
                 transform2D, Color.White, 1, SpriteEffects.None, texture, new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
             menuManager.Add("exit", uiObject);
 
-            //background lose Screen
-            texture = textureDictionary["exitmenuwithtrans"];
-            fullScreenScaleFactor = new Vector2((float)_graphics.PreferredBackBufferWidth / texture.Width, (float)_graphics.PreferredBackBufferHeight / texture.Height);
-            transform2D = new Transform2D(fullScreenScaleFactor);
-            uiObject = new UITextureObject("lose_bckgnd", ActorType.UITextureObject, StatusType.Drawn,
-                transform2D, Color.White, 1, SpriteEffects.None, texture, new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
-            menuManager.Add("lose", uiObject);
-
-            //background win Screen
-            texture = textureDictionary["exitmenuwithtrans"];
-            fullScreenScaleFactor = new Vector2((float)_graphics.PreferredBackBufferWidth / texture.Width, (float)_graphics.PreferredBackBufferHeight / texture.Height);
-            transform2D = new Transform2D(fullScreenScaleFactor);
-            uiObject = new UITextureObject("lose_bckgnd", ActorType.UITextureObject, StatusType.Drawn,
-                transform2D, Color.White, 1, SpriteEffects.None, texture, new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
-            menuManager.Add("win", uiObject);
             #endregion All Menu Background Images
 
-            #region Main Menu Buttons
+            #region Main Menu Elements
+
+            #region Buttons
             //main menu buttons
             texture = textureDictionary["genericbtn"];
-
-            Vector2 origin = new Vector2(texture.Width / 2, texture.Height / 2);
-
-            Integer2 imageDimensions = new Integer2(texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            imageDimensions = new Integer2(texture.Width, texture.Height);
 
             //play
-            transform2D = new Transform2D(screenCentre - new Vector2(0, 50), 0, Vector2.One, origin, imageDimensions);
+            transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
             uiObject = new UIButtonObject("play", ActorType.UITextureObject, StatusType.Drawn,
                 transform2D, Color.White, 1, SpriteEffects.None, texture,
-                new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height),
+                new Rectangle(0, 0, texture.Width, texture.Height),
                 "Play",
                 fontDictionary["menu"],
                 new Vector2(1, 1),
                 Color.Blue,
                 new Vector2(0, 0));
-            menuManager.Add("main", uiObject);
+            
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.Green, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("main", uiObject); 
 
             //exit
-            transform2D = new Transform2D(screenCentre + new Vector2(0, 50), 0, Vector2.One, origin, imageDimensions);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
             uiObject = new UIButtonObject("exit", ActorType.UITextureObject,
                 StatusType.Update | StatusType.Drawn,
              transform2D, Color.White, 1, SpriteEffects.None, texture,
-             new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height),
+             new Rectangle(0, 0, texture.Width, texture.Height),
              "Exit",
              fontDictionary["menu"],
              new Vector2(1, 1),
@@ -487,14 +487,201 @@ namespace GDGame
             uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
               mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
-            menuManager.Add("main", uiObject); 
+            menuManager.Add("main", uiObject);
+            #endregion
+
+            #region Title Logo
+            //Logo was generated on https://de.cooltext.com/
+            texture = textureDictionary["MainMenuTitle"];
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UITextureObject("Game Title", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn, transform2D,
+                Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height));
+            uiObject.ControllerList.Add(new UIScaleLerpController("Scale Lerp Controller", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("main", uiObject);
+            #endregion
+
+            #endregion
+
+            #region Pause Menu Elements
+
+            #region Buttons
+            //main menu buttons
+            texture = textureDictionary["genericbtn"];
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+
+            //resume
+            transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("resume", ActorType.UITextureObject, StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                "Resume",
+                fontDictionary["menu"],
+                new Vector2(1, 1),
+                Color.Blue,
+                new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.Green, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("pause", uiObject);
+
+            //Back to menu
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("tomenu", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn,
+             transform2D, Color.White, 1, SpriteEffects.None, texture,
+             new Rectangle(0, 0, texture.Width, texture.Height),
+             "Back To Menu",
+             fontDictionary["menu"],
+             new Vector2(1, 1),
+             Color.Blue,
+             new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                 mouseManager, Color.Red, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+              mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("pause", uiObject);
+
+            //Exit
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("exit", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                "Exit",
+                fontDictionary["menu"],
+                new Vector2(1, 1),
+                Color.Blue,
+                new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.DarkRed, Color.Red));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("pause", uiObject);
+            #endregion 
+
+            #region Title
+            //Logo was generated on https://de.cooltext.com/
+            texture = textureDictionary["PauseMenuTitle"];
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UITextureObject("Game Title", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn, transform2D,
+                Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height));
+            uiObject.ControllerList.Add(new UIScaleLerpController("Scale Lerp Controller", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("pause", uiObject);
+            #endregion
+
+            #endregion
+
+            #region Lose Screen Elements
+
+            #region Buttons
+            //main menu buttons
+            texture = textureDictionary["genericbtn"];
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+
+            //restart
+            transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("restart", ActorType.UITextureObject, StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                "Restart",
+                fontDictionary["menu"],
+                new Vector2(1, 1),
+                Color.Blue,
+                new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.Green, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("lose", uiObject);
+
+            //Back to menu
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("tomenu", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn,
+             transform2D, Color.White, 1, SpriteEffects.None, texture,
+             new Rectangle(0, 0, texture.Width, texture.Height),
+             "Back To Menu",
+             fontDictionary["menu"],
+             new Vector2(1, 1),
+             Color.Blue,
+             new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                 mouseManager, Color.Red, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+              mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("lose", uiObject);
+
+            //Exit
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("exit", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                "Exit",
+                fontDictionary["menu"],
+                new Vector2(1, 1),
+                Color.Blue,
+                new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.DarkRed, Color.Red));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("lose", uiObject);
+            #endregion 
+
+            #region Title
+            //Logo was generated on https://de.cooltext.com/
+            texture = textureDictionary["LoseScreenTitle"];
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UITextureObject("Game Title", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn, transform2D,
+                Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height));
+            uiObject.ControllerList.Add(new UIScaleLerpController("Scale Lerp Controller", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("lose", uiObject);
+            #endregion
+
             #endregion
 
             //finally dont forget to SetScene to say which menu should be drawn/updated!
             menuManager.SetScene("main");
-
-
-
         }
 
         private void InitEventDispatcher()
@@ -576,8 +763,7 @@ namespace GDGame
             Components.Add(uiManager);
 
             //add menu
-            menuManager = new MyMenuManager(this, StatusType.Update | StatusType.Drawn, _spriteBatch,
-                mouseManager, keyboardManager);
+            menuManager = new MyMenuManager(this, StatusType.Update | StatusType.Drawn, _spriteBatch, mouseManager);
             menuManager.DrawOrder = 5; //highest number of all drawable managers since we want it drawn on top!
             Components.Add(menuManager);
 
@@ -590,14 +776,14 @@ namespace GDGame
             Components.Add(tweeningManager);
 
             //Time Manager (provides timed callbacks)
-            timeManager = new TimeManager(this, StatusType.Off);
+            timeManager = new TimeManager(this, StatusType.Update);
             Components.Add(timeManager);
 
             //stores all the levels and loads them when necessary
             levelManager = new LevelManager(objectManager);
 
             //Game State
-            gameStateManager = new MyGameStateManager(this, StatusType.Update, cameraManager, levelManager);
+            gameStateManager = new MyGameStateManager(this, StatusType.Off, cameraManager, levelManager, keyboardManager);
             Components.Add(gameStateManager);
         }
 

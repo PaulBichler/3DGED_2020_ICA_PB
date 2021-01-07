@@ -222,6 +222,8 @@
         OnAddChild,
         OnRemoveChild,
         OnStarPickup,
-        SetListener
+        OnSetListener,
+        OnPauseGame,
+        OnLeaveGame
     }
 }

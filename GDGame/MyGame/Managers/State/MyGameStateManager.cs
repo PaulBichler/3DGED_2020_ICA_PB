@@ -8,6 +8,7 @@ using GDLibrary.GameComponents;
 using GDLibrary.Interfaces;
 using GDLibrary.Managers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace GDLibrary.Core.Managers.State
 {
@@ -18,13 +19,16 @@ namespace GDLibrary.Core.Managers.State
     {
         private CameraManager<Camera3D> cameraManager;
         private LevelManager levelManager;
+        private KeyboardManager keyboardManager;
         private Actor3D player;
         private int stars;
+        private bool gamePaused;
 
-        public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager, LevelManager levelManager) : base(game, statusType)
+        public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager, LevelManager levelManager, KeyboardManager keyboardManager) : base(game, statusType)
         {
             this.cameraManager = cameraManager;
             this.levelManager = levelManager;
+            this.keyboardManager = keyboardManager;
         }
 
         public override void SubscribeToEvents()
@@ -46,13 +50,16 @@ namespace GDLibrary.Core.Managers.State
                     case EventActionType.OnWin:
                         EndGame(EventActionType.OnWin);
                         break;
+                    case EventActionType.OnLeaveGame:
+                        gamePaused = false;
+                        break;
                     case EventActionType.OnStart:
                         StartGame(eventData.Parameters[0] as string);
                         break;
                     case EventActionType.OnSpawn:
                         //get a reference to the player to set the target in the follow camera
                         player = eventData.Parameters[0] as Actor3D;
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.SetListener, new [] { player.Transform3D }));
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnSetListener, new [] { player.Transform3D }));
                         (cameraManager[1].ControllerList.Find(c => c is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
                         break;
                     case EventActionType.OnStarPickup:
@@ -96,6 +103,30 @@ namespace GDLibrary.Core.Managers.State
 
             //Remove the curve controller
             cameraManager[0].ControllerList.Remove(c => c is Curve3DController);
+        }
+
+        protected override void HandleInput(GameTime gameTime)
+        {
+            HandleKeyboard(gameTime);
+        }
+
+        protected override void HandleKeyboard(GameTime gameTime)
+        {
+            if (this.keyboardManager.IsFirstKeyPress(Keys.Escape))
+            {
+                if (StatusType == StatusType.Off && gamePaused)
+                {
+                    //unpause game
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
+                    gamePaused = false;
+                }
+                else if(StatusType != StatusType.Off && !gamePaused)
+                {
+                    //pause game
+                    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPauseGame, null));
+                    gamePaused = true;
+                }
+            }
         }
     }
 }
