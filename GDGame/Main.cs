@@ -114,10 +114,21 @@ namespace GDGame
 
         private void LoadSounds()
         {
-            soundManager.Add(new GDLibrary.Managers.Cue("smokealarm",
+            soundManager.Add(new GDLibrary.Managers.Cue("smokealarm", 
                 Content.Load<SoundEffect>("Assets/Audio/Effects/smokealarm1"), SoundCategoryType.Alarm, new Vector3(1, 0, 0), false));
 
             //to do..add more sounds
+
+            soundManager.Add(new GDLibrary.Managers.Cue("jump", 
+                Content.Load<SoundEffect>("Assets/Audio/Effects/PlayerJump"), SoundCategoryType.Jump, Vector3.One, false));
+            soundManager.Add(new GDLibrary.Managers.Cue("shoot", 
+                Content.Load<SoundEffect>("Assets/Audio/Effects/Shoot"), SoundCategoryType.Shoot, Vector3.One, false));
+            soundManager.Add(new GDLibrary.Managers.Cue("star", 
+                Content.Load<SoundEffect>("Assets/Audio/Effects/StarPickup2"), SoundCategoryType.Pickup, Vector3.One, false));
+            soundManager.Add(new GDLibrary.Managers.Cue("lose", 
+                Content.Load<SoundEffect>("Assets/Audio/Effects/LoseSound"), SoundCategoryType.WinLose, Vector3.One, false));
+            soundManager.Add(new GDLibrary.Managers.Cue("win", 
+                Content.Load<SoundEffect>("Assets/Audio/Effects/WinSound"), SoundCategoryType.WinLose, Vector3.One, false));
         }
 
         private void LoadEffects()

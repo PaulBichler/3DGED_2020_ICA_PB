@@ -8,6 +8,7 @@ using GDLibrary.Interfaces;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 
 namespace GDLibrary
@@ -122,6 +123,7 @@ namespace GDLibrary
                     LoopType.PlayOnce, EasingType.easeOut);
 
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[] { jumpUp }));
+                EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay3D, new object[] { "jump", Transform3D }));
                 isMoving = true;
             }
         }

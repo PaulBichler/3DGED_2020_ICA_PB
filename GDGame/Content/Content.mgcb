@@ -19,11 +19,47 @@
 /processorParam:Quality=Best
 /build:Assets/Audio/Effects/explode1.mp3
 
+#begin Assets/Audio/Effects/LoseSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Effects/LoseSound.wav
+
+#begin Assets/Audio/Effects/PlayerJump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Effects/PlayerJump.wav
+
+#begin Assets/Audio/Effects/Shoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Effects/Shoot.wav
+
 #begin Assets/Audio/Effects/smokealarm1.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Assets/Audio/Effects/smokealarm1.ogg
+
+#begin Assets/Audio/Effects/StarPickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Effects/StarPickup.wav
+
+#begin Assets/Audio/Effects/StarPickup2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Effects/StarPickup2.wav
+
+#begin Assets/Audio/Effects/WinSound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Assets/Audio/Effects/WinSound.wav
 
 #begin Assets/Demo/Textures/checkerboard.png
 /importer:TextureImporter

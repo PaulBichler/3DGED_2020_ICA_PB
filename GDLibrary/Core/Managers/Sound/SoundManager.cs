@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
+using GDGame.MyGame.Managers;
+using GDLibrary.Parameters;
 
 namespace GDLibrary.Managers
 {
@@ -173,6 +175,9 @@ namespace GDLibrary.Managers
     {
         private Dictionary<string, Cue> dictionary;
         private List<KeyValuePair<string, SoundEffectInstance>> listInstances2D;
+        private AudioListener listener = new AudioListener();
+        private AudioEmitter emitter = new AudioEmitter();
+        private Transform3D listenerTransform;
 
         public SoundManager(Game game, StatusType statusType)
             : base(game, statusType)
@@ -193,16 +198,20 @@ namespace GDLibrary.Managers
 
         public override void HandleEvent(EventData eventData)
         {
-            if (eventData.EventActionType == EventActionType.OnPlay2D)
+            switch (eventData.EventActionType)
             {
-                Play2D(eventData.Parameters[0] as string);
+                case EventActionType.OnPlay2D:
+                    Play2D(eventData.Parameters[0] as string);
+                    break;
+                case EventActionType.OnPlay3D:
+                    emitter.Position = (eventData.Parameters[1] as Transform3D).Translation;
+                    listener.Position = listenerTransform.Translation;
+                    Play3D(eventData.Parameters[0] as string, listener, emitter);
+                    break;
+                case EventActionType.SetListener:
+                    listenerTransform = eventData.Parameters[0] as Transform3D;
+                    break;
             }
-            else if (eventData.EventActionType == EventActionType.OnPlay3D)
-            {
-                Play3D(eventData.Parameters[0] as string, eventData.Parameters[1] as AudioListener,
-                                                        eventData.Parameters[2] as AudioEmitter);
-            }
-            //add more if statements for each method that we want to support with events
 
             //remember to pass the eventData down so the parent class can process pause/unpause
             //if we always want the SoundManager to be available (even in menu) then comment this line out
@@ -245,7 +254,12 @@ namespace GDLibrary.Managers
                 soundEffectInstance.Play();
 
                 //store in order to support later pause and stop functionality
-                listInstances2D.Add(new KeyValuePair<string, SoundEffectInstance>(id, soundEffectInstance));
+                KeyValuePair<string, SoundEffectInstance> pair = new KeyValuePair<string, SoundEffectInstance>(id, soundEffectInstance);
+                listInstances2D.Add(pair);
+
+                if(!cue.IsLooped)
+                    TimeManager.ExecuteInSeconds(soundEffectInstance.GetHashCode().ToString(), 
+                        (float)cue.SoundEffect.Duration.TotalSeconds, () => listInstances2D.Remove(pair));
             }
         }
 
@@ -266,7 +280,12 @@ namespace GDLibrary.Managers
                 soundEffectInstance.Play();
 
                 //store in order to support later pause and stop functionality
-                listInstances2D.Add(new KeyValuePair<string, SoundEffectInstance>(id, soundEffectInstance));
+                KeyValuePair<string, SoundEffectInstance> pair = new KeyValuePair<string, SoundEffectInstance>(id, soundEffectInstance);
+                listInstances2D.Add(pair);
+
+                if(!cue.IsLooped)
+                    TimeManager.ExecuteInSeconds(soundEffectInstance.GetHashCode().ToString(), 
+                        (float)cue.SoundEffect.Duration.TotalSeconds, () => listInstances2D.Remove(pair));
             }
         }
 

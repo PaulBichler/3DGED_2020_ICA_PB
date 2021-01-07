@@ -52,9 +52,11 @@ namespace GDLibrary.Core.Managers.State
                     case EventActionType.OnSpawn:
                         //get a reference to the player to set the target in the follow camera
                         player = eventData.Parameters[0] as Actor3D;
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.SetListener, new [] { player.Transform3D }));
                         (cameraManager[1].ControllerList.Find(c => c is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
                         break;
-                    case EventActionType.OnPickup:
+                    case EventActionType.OnStarPickup:
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "star" }));
                         stars++;
                         break;
                 }
@@ -86,6 +88,11 @@ namespace GDLibrary.Core.Managers.State
         private void EndGame(EventActionType endState)
         {
             EventDispatcher.Publish(new EventData(EventCategoryType.Menu, endState, null));
+
+            if(endState == EventActionType.OnWin)
+                EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "win" }));
+            else if(endState == EventActionType.OnLose)
+                EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "lose" }));
 
             //Remove the curve controller
             cameraManager[0].ControllerList.Remove(c => c is Curve3DController);

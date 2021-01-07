@@ -5,7 +5,10 @@
         WinLose,
         Explosion,
         BackgroundMusic,
-        Alarm
+        Alarm,
+        Jump,
+        Shoot,
+        Pickup
     }
 
     /// <summary>
@@ -217,6 +220,7 @@
 
         OnAddChild,
         OnRemoveChild,
-        OnStarPickup
+        OnStarPickup,
+        SetListener
     }
 }

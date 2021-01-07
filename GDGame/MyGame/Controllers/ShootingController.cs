@@ -61,6 +61,7 @@ namespace GDGame.MyGame.Controllers
                             EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new[] { actor3D }));
                         }, LoopType.PlayOnce, EasingType.easeIn) 
                 }));
+                EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay3D, new object[] { "shoot", parentTransform }));
             }
         }
 
