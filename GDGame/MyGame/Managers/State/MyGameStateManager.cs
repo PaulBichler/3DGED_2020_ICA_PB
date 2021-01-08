@@ -23,6 +23,7 @@ namespace GDLibrary.Core.Managers.State
         private Actor3D player;
         private int stars;
         private bool gamePaused;
+        private bool hasGameStarted;
 
         public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager, LevelManager levelManager, KeyboardManager keyboardManager) : base(game, statusType)
         {
@@ -76,17 +77,18 @@ namespace GDLibrary.Core.Managers.State
         private void StartGame(string levelId)
         {
             levelManager.LoadLevel(levelId);
+            hasGameStarted = true;
 
-            //Start curve camera
+            //Start the intro curve camera
             cameraManager[0].ControllerList.Add(new Curve3DController("Start Curve Camera", ControllerType.Curve, levelManager.currentLevel.StartCameraCurve));
             cameraManager.ActiveCameraIndex = 0;
             EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
 
             //Switch to player camera after curve has been completed
-            TimeManager.ExecuteInSeconds("Camera Switch", 9, StartCamera);
+            TimeManager.ExecuteInSeconds("Camera Switch", 9, SwitchCamera);
         }
 
-        private void StartCamera()
+        private void SwitchCamera()
         {
             player.StatusType = StatusType.Update | StatusType.Drawn;
             cameraManager.CycleActiveCamera();
@@ -94,6 +96,7 @@ namespace GDLibrary.Core.Managers.State
 
         private void EndGame(EventActionType endState)
         {
+            hasGameStarted = false;
             EventDispatcher.Publish(new EventData(EventCategoryType.Menu, endState, null));
 
             if(endState == EventActionType.OnWin)
@@ -112,19 +115,15 @@ namespace GDLibrary.Core.Managers.State
 
         protected override void HandleKeyboard(GameTime gameTime)
         {
-            if (this.keyboardManager.IsFirstKeyPress(Keys.Escape))
+            //pause / unpause functionality
+            if (this.keyboardManager.IsFirstKeyPress(Keys.Escape) && hasGameStarted)
             {
-                if (StatusType == StatusType.Off && gamePaused)
-                {
-                    //unpause game
+                if (StatusType == StatusType.Off)
                     EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
-                    gamePaused = false;
-                }
-                else if(StatusType != StatusType.Off && !gamePaused)
+                else
                 {
-                    //pause game
                     EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPauseGame, null));
-                    gamePaused = true;
+                    StatusType = StatusType.Off;
                 }
             }
         }

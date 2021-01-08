@@ -92,7 +92,13 @@ namespace GDGame.MyGame.Managers
             switch (uIButtonObject.ID)
             {
                 case "play":
+                    SetScene("levelselect");
+                    break;
+                case "level1":
                     EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart,  new []{ "Level 1" }));
+                    break;
+                case "level2":
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart,  new []{ "Level 2" }));
                     break;
                 case "resume":
                     EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));

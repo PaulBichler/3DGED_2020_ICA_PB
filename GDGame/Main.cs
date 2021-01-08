@@ -197,6 +197,7 @@ namespace GDGame
             textureDictionary.Load("Assets/Textures/UI/Other/PauseMenuTitle");
             textureDictionary.Load("Assets/Textures/UI/Other/LoseScreenTitle");
             textureDictionary.Load("Assets/Textures/UI/Other/WinScreenTitle");
+            textureDictionary.Load("Assets/Textures/UI/Other/LevelSelectTitle");
 
             //ui
             textureDictionary.Load("Assets/Textures/UI/Controls/reticuleDefault");
@@ -415,6 +416,7 @@ namespace GDGame
             menuManager.Add("pause", uiObject);
             menuManager.Add("lose", uiObject);
             menuManager.Add("win", uiObject);
+            menuManager.Add("levelselect", uiObject);
 
             //background audio
             texture = textureDictionary["audiomenu"];
@@ -452,7 +454,7 @@ namespace GDGame
 
             //play
             transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
-            uiObject = new UIButtonObject("play", ActorType.UITextureObject, StatusType.Drawn,
+            uiObject = new UIButtonObject("play", ActorType.UITextureObject, StatusType.Update | StatusType.Drawn,
                 transform2D, Color.White, 1, SpriteEffects.None, texture,
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 "Play",
@@ -508,6 +510,91 @@ namespace GDGame
 
             #endregion
 
+            #region Level Select Elements
+
+            #region Buttons
+            //main menu buttons
+            texture = textureDictionary["genericbtn"];
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+
+            //level 1 button
+            transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("level1", ActorType.UITextureObject, StatusType.Update | StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                "Level 1",
+                fontDictionary["menu"],
+                new Vector2(1, 1),
+                Color.Blue,
+                new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.Green, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("levelselect", uiObject);
+
+            //level 2
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("level2", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn,
+             transform2D, Color.White, 1, SpriteEffects.None, texture,
+             new Rectangle(0, 0, texture.Width, texture.Height),
+             "Level 2",
+             fontDictionary["menu"],
+             new Vector2(1, 1),
+             Color.Blue,
+             new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                 mouseManager, Color.Green, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+              mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("levelselect", uiObject);
+
+            //back to menu
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 300), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("tomenu", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn,
+                transform2D, Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height),
+                "Back To Menu",
+                fontDictionary["menu"],
+                new Vector2(1, 1),
+                Color.Blue,
+                new Vector2(0, 0));
+
+            uiObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
+                mouseManager, Color.Red, Color.White));
+
+            uiObject.ControllerList.Add(new UIScaleLerpController("slc1", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("levelselect", uiObject);
+            #endregion
+
+            #region Level Select Title
+            //Logo was generated on https://de.cooltext.com/
+            texture = textureDictionary["LevelSelectTitle"];
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UITextureObject("Level Select Title", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn, transform2D,
+                Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height));
+            uiObject.ControllerList.Add(new UIScaleLerpController("Scale Lerp Controller", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("levelselect", uiObject);
+            #endregion 
+            #endregion
+
             #region Pause Menu Elements
 
             #region Buttons
@@ -518,7 +605,7 @@ namespace GDGame
 
             //resume
             transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
-            uiObject = new UIButtonObject("resume", ActorType.UITextureObject, StatusType.Drawn,
+            uiObject = new UIButtonObject("resume", ActorType.UITextureObject, StatusType.Update | StatusType.Drawn,
                 transform2D, Color.White, 1, SpriteEffects.None, texture,
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 "Resume",
@@ -594,7 +681,7 @@ namespace GDGame
 
             #endregion
 
-            #region Lose Screen Elements
+            #region Lose/Win Screen Elements
 
             #region Buttons
             //main menu buttons
@@ -620,6 +707,7 @@ namespace GDGame
                 mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
             menuManager.Add("lose", uiObject);
+            menuManager.Add("win", uiObject);
 
             //Back to menu
             transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
@@ -640,6 +728,7 @@ namespace GDGame
               mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
             menuManager.Add("lose", uiObject);
+            menuManager.Add("win", uiObject);
 
             //Exit
             transform2D = new Transform2D(screenCentre + new Vector2(0, 200), 0, Vector2.One, origin, imageDimensions);
@@ -660,15 +749,16 @@ namespace GDGame
                 mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
             menuManager.Add("lose", uiObject);
+            menuManager.Add("win", uiObject);
             #endregion 
 
-            #region Title
+            #region Lose Title
             //Logo was generated on https://de.cooltext.com/
             texture = textureDictionary["LoseScreenTitle"];
             imageDimensions = new Integer2(texture.Width, texture.Height);
             origin = new Vector2(texture.Width / 2, texture.Height / 2);
             transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
-            uiObject = new UITextureObject("Game Title", ActorType.UITextureObject,
+            uiObject = new UITextureObject("Lose Title", ActorType.UITextureObject,
                 StatusType.Update | StatusType.Drawn, transform2D,
                 Color.White, 1, SpriteEffects.None, texture,
                 new Rectangle(0, 0, texture.Width, texture.Height));
@@ -676,6 +766,22 @@ namespace GDGame
                 mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
             menuManager.Add("lose", uiObject);
+            #endregion
+
+            #region Win Title
+            //Logo was generated on https://de.cooltext.com/
+            texture = textureDictionary["WinScreenTitle"];
+            imageDimensions = new Integer2(texture.Width, texture.Height);
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UITextureObject("Win Title", ActorType.UITextureObject,
+                StatusType.Update | StatusType.Drawn, transform2D,
+                Color.White, 1, SpriteEffects.None, texture,
+                new Rectangle(0, 0, texture.Width, texture.Height));
+            uiObject.ControllerList.Add(new UIScaleLerpController("Scale Lerp Controller", ControllerType.ScaleLerpOverTime,
+                mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
+
+            menuManager.Add("win", uiObject); 
             #endregion
 
             #endregion
@@ -783,7 +889,7 @@ namespace GDGame
             levelManager = new LevelManager(objectManager);
 
             //Game State
-            gameStateManager = new MyGameStateManager(this, StatusType.Off, cameraManager, levelManager, keyboardManager);
+            gameStateManager = new MyGameStateManager(this, StatusType.Update, cameraManager, levelManager, keyboardManager);
             Components.Add(gameStateManager);
         }
 
