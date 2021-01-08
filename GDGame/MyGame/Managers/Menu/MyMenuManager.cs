@@ -113,8 +113,8 @@ namespace GDGame.MyGame.Managers
                     SetScene("main");
                     EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnLeaveGame, null));
                     break;
-                case "levelselect":
-                    SetScene("levelselect");
+                case "restart":
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnRestart, null));
                     break;
                 default:
                     break;

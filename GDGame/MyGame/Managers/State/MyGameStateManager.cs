@@ -22,8 +22,8 @@ namespace GDLibrary.Core.Managers.State
         private KeyboardManager keyboardManager;
         private Actor3D player;
         private int stars;
-        private bool gamePaused;
         private bool hasGameStarted;
+        private string currentLevelId;
 
         public MyGameStateManager(Game game, StatusType statusType, CameraManager<Camera3D> cameraManager, LevelManager levelManager, KeyboardManager keyboardManager) : base(game, statusType)
         {
@@ -52,10 +52,13 @@ namespace GDLibrary.Core.Managers.State
                         EndGame(EventActionType.OnWin);
                         break;
                     case EventActionType.OnLeaveGame:
-                        gamePaused = false;
+                        hasGameStarted = false;
                         break;
                     case EventActionType.OnStart:
                         StartGame(eventData.Parameters[0] as string);
+                        break;
+                    case EventActionType.OnRestart:
+                        StartGame(currentLevelId);
                         break;
                     case EventActionType.OnSpawn:
                         //get a reference to the player to set the target in the follow camera
@@ -64,8 +67,9 @@ namespace GDLibrary.Core.Managers.State
                         (cameraManager[1].ControllerList.Find(c => c is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
                         break;
                     case EventActionType.OnStarPickup:
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "star" }));
                         stars++;
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "star" }));
+                        EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnStarPickup, new object[] { stars }));
                         break;
                 }
             }
@@ -78,11 +82,14 @@ namespace GDLibrary.Core.Managers.State
         {
             levelManager.LoadLevel(levelId);
             hasGameStarted = true;
+            currentLevelId = levelId;
+            stars = 0;
 
             //Start the intro curve camera
             cameraManager[0].ControllerList.Add(new Curve3DController("Start Curve Camera", ControllerType.Curve, levelManager.currentLevel.StartCameraCurve));
             cameraManager.ActiveCameraIndex = 0;
             EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
+            EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnStarPickup, new object[] { stars }));
 
             //Switch to player camera after curve has been completed
             TimeManager.ExecuteInSeconds("Camera Switch", 9, SwitchCamera);

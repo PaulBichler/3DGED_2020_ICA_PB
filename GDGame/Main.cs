@@ -87,7 +87,7 @@ namespace GDGame
 
         private void InitDebug()
         {
-            InitDebugInfo(true);
+            //InitDebugInfo(true);
         }
 
         private void InitDebugInfo(bool bEnable)
@@ -181,6 +181,8 @@ namespace GDGame
 
             //ui
             textureDictionary.Load("Assets/Textures/UI/Controls/progress_white");
+            textureDictionary.Load("Assets/Textures/UI/HUD/StarsOutlineHud");
+            textureDictionary.Load("Assets/Textures/UI/HUD/StarsFilledHud");
 
             //props
             textureDictionary.Load("Assets/Textures/Props/Crates/crate1");
@@ -343,32 +345,30 @@ namespace GDGame
             uiManager.Add(uiMouseObject);
             #endregion Mouse Reticule & Text
 
-            #region Progress Control Left
-            texture = textureDictionary["progress_white"];
-
-            transform2D = new Transform2D(new Vector2(512, 20),
-                0,
-                 Vector2.One,
+            #region Star Progress
+            //Foreground
+            texture = textureDictionary["StarsFilledHud"];
+            transform2D = new Transform2D(new Vector2(texture.Width / 2, 30),
+                0, Vector2.One,
                 new Vector2(texture.Width / 2, texture.Height / 2),
-                new Integer2(100, 100));
+                new Integer2(texture.Width, texture.Height));
 
-            UITextureObject uiTextureObject = new UITextureObject("progress 1", ActorType.UITextureObject,
-                StatusType.Drawn | StatusType.Update, transform2D, Color.Yellow, 0, SpriteEffects.None,
-                texture,
-                new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height));
+            UITextureObject uiTextureObject = new UITextureObject("star progress", ActorType.UITextureObject,
+                StatusType.Drawn | StatusType.Update, transform2D, Color.White, 0, SpriteEffects.None,
+                texture, new Rectangle(0, 0, texture.Width, texture.Height));
 
-            //uiTextureObject.ControllerList.Add(new UIRotationController("rc1", ControllerType.RotationOverTime));
-
-            //uiTextureObject.ControllerList.Add(new UIColorLerpController("clc1", ControllerType.ColorLerpOverTime,
-            //    Color.White, Color.Black));
-
-            //uiTextureObject.ControllerList.Add(new UIMouseController("moc1", ControllerType.MouseOver,
-            //    this.mouseManager));
-
-            uiTextureObject.ControllerList.Add(new UIProgressController("pc1", ControllerType.Progress, 0, 10));
-
+            uiTextureObject.ControllerList.Add(new UIProgressController("pc1", ControllerType.Progress, 0, 3));
             uiManager.Add(uiTextureObject);
-            #endregion Progress Control Left
+
+            //Background
+            texture = textureDictionary["StarsOutlineHud"];
+            transform2D = transform2D.Clone() as Transform2D;
+
+            uiTextureObject = new UITextureObject("star progress background", ActorType.UITextureObject,
+                StatusType.Drawn | StatusType.Update, transform2D, Color.White, 0, SpriteEffects.None,
+                texture, new Rectangle(0, 0, texture.Width, texture.Height));
+            uiManager.Add(uiTextureObject);
+            #endregion Star Progress
 
             #region Text Object
             spriteFont = Content.Load<SpriteFont>("Assets/Fonts/debug");
@@ -690,8 +690,8 @@ namespace GDGame
             imageDimensions = new Integer2(texture.Width, texture.Height);
 
             //restart
-            transform2D = new Transform2D(screenCentre, 0, Vector2.One, origin, imageDimensions);
-            uiObject = new UIButtonObject("restart", ActorType.UITextureObject, StatusType.Drawn,
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
+            uiObject = new UIButtonObject("restart", ActorType.UITextureObject, StatusType.Drawn | StatusType.Update,
                 transform2D, Color.White, 1, SpriteEffects.None, texture,
                 new Rectangle(0, 0, texture.Width, texture.Height),
                 "Restart",
@@ -710,7 +710,7 @@ namespace GDGame
             menuManager.Add("win", uiObject);
 
             //Back to menu
-            transform2D = new Transform2D(screenCentre + new Vector2(0, 100), 0, Vector2.One, origin, imageDimensions);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 200), 0, Vector2.One, origin, imageDimensions);
             uiObject = new UIButtonObject("tomenu", ActorType.UITextureObject,
                 StatusType.Update | StatusType.Drawn,
              transform2D, Color.White, 1, SpriteEffects.None, texture,
@@ -731,7 +731,7 @@ namespace GDGame
             menuManager.Add("win", uiObject);
 
             //Exit
-            transform2D = new Transform2D(screenCentre + new Vector2(0, 200), 0, Vector2.One, origin, imageDimensions);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, 300), 0, Vector2.One, origin, imageDimensions);
             uiObject = new UIButtonObject("exit", ActorType.UITextureObject,
                 StatusType.Update | StatusType.Drawn,
                 transform2D, Color.White, 1, SpriteEffects.None, texture,
@@ -781,7 +781,33 @@ namespace GDGame
             uiObject.ControllerList.Add(new UIScaleLerpController("Scale Lerp Controller", ControllerType.ScaleLerpOverTime,
                 mouseManager, new TrigonometricParameters(0.02f, 1, 0)));
 
-            menuManager.Add("win", uiObject); 
+            menuManager.Add("win", uiObject);
+            #endregion
+
+            #region Star Display
+            texture = textureDictionary["StarsFilledHud"];
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -50),
+                0, Vector2.One * 2,
+                new Vector2(texture.Width / 2, texture.Height / 2),
+                new Integer2(texture.Width, texture.Height));
+
+            UITextureObject uiTextureObject = new UITextureObject("star progress end screen", ActorType.UITextureObject,
+                StatusType.Drawn | StatusType.Update, transform2D, Color.White, 0, SpriteEffects.None,
+                texture, new Rectangle(0, 0, texture.Width, texture.Height));
+
+            uiTextureObject.ControllerList.Add(new UIProgressController("pc1", ControllerType.Progress, 0, 3));
+            menuManager.Add("lose", uiTextureObject);
+            menuManager.Add("win", uiTextureObject);
+
+            //Background
+            texture = textureDictionary["StarsOutlineHud"];
+            transform2D = transform2D.Clone() as Transform2D;
+
+            uiTextureObject = new UITextureObject("star progress background", ActorType.UITextureObject,
+                StatusType.Drawn | StatusType.Update, transform2D, Color.White, 0, SpriteEffects.None,
+                texture, new Rectangle(0, 0, texture.Width, texture.Height));
+            menuManager.Add("lose", uiTextureObject);
+            menuManager.Add("win", uiTextureObject); 
             #endregion
 
             #endregion
@@ -1518,17 +1544,6 @@ namespace GDGame
             else if (keyboardManager.IsFirstKeyPress(Keys.F10))
             {
                 EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
-            }
-
-            if (keyboardManager.IsFirstKeyPress(Keys.Up))
-            {
-                object[] parameters = { 1 }; //will increase the progress by 1 to its max of 10 (see InitUI)
-                EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnHealthDelta, parameters));
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.Down))
-            {
-                object[] parameters = { -1 }; //will decrease the progress by 1 to its min of 0 (see InitUI)
-                EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnHealthDelta, parameters));
             }
 
             if (keyboardManager.IsFirstKeyPress(Keys.F5)) //game -> menu

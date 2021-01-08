@@ -63,9 +63,9 @@ namespace GDGame.Controllers
         private void HandleEvents(EventData eventData)
         {
             if (eventData.EventActionType == EventActionType.OnHealthDelta)
-            {
                 CurrentValue = currentValue + (int)eventData.Parameters[0];
-            }
+            else if (eventData.EventActionType == EventActionType.OnStarPickup)
+                CurrentValue = (int)eventData.Parameters[0];
         }
 
         public override void Update(GameTime gameTime, IActor actor)
