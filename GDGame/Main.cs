@@ -60,9 +60,6 @@ namespace GDGame
         //use normal Dictionary to store objects that do NOT need the Content.Load() method to be called (i.e. the object is not based on an asset file)
         private Dictionary<string, Transform3DCurve> transform3DCurveDictionary;
 
-        //stores the rails used by the camera
-        private Dictionary<string, RailParameters> railDictionary;
-
         //stores the archetypal primitive objects (used in Main and LevelLoader)
         private Dictionary<string, PrimitiveObject> archetypeDictionary;
 
@@ -262,9 +259,8 @@ namespace GDGame
             //add archetypes that can be cloned
             InitArchetypes();
 
-            //curves and rails used by cameras
+            //curves used by cameras
             InitCurves();
-            InitRails();
 
             //drawn content (collidable and noncollidable together - its simpler)
             InitLevel(worldScale);
@@ -838,12 +834,6 @@ namespace GDGame
             transform3DCurveDictionary.Add("Start Camera Curve", curveA);
         }
 
-        private void InitRails()
-        {
-            //create the track to be applied to the non-collidable track camera 1
-            railDictionary.Add("rail1", new RailParameters("rail1 - parallel to z-axis", new Vector3(20, 10, 50), new Vector3(20, 10, -50)));
-        }
-
         private void InitDictionaries()
         {
             //stores effects
@@ -856,9 +846,6 @@ namespace GDGame
 
             //curves - notice we use a basic Dictionary and not a ContentDictionary since curves and rails are NOT media content
             transform3DCurveDictionary = new Dictionary<string, Transform3DCurve>();
-
-            //rails - store rails used by cameras
-            railDictionary = new Dictionary<string, RailParameters>();
 
             //used to store archetypes for primitives in the game
             archetypeDictionary = new Dictionary<string, PrimitiveObject>();
@@ -1334,14 +1321,6 @@ namespace GDGame
             #endregion
         }
 
-        /// <summary>
-        /// Demos how we can clone an archetype and manually add to the object manager.
-        /// </summary>
-        private void InitDecorators()
-        {
-            
-        }
-
         private void InitHelpers()
         {
             //clone the archetype
@@ -1444,104 +1423,15 @@ namespace GDGame
 
         protected override void Update(GameTime gameTime)
         {
-            //if (keyboardManager.IsFirstKeyPress(Keys.Escape))
-            //    EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-
             if (keyboardManager.IsFirstKeyPress(GameConstants.SoundControlKeys[2]))
-                soundManager.SetMasterVolume(0);
+                soundManager.ToggleMute();
             else if(keyboardManager.IsFirstKeyPress(GameConstants.SoundControlKeys[0]))
-                soundManager.ChangeMasterVolume(.1f);
+                soundManager.ChangeMasterVolume(.2f);
             else if(keyboardManager.IsFirstKeyPress(GameConstants.SoundControlKeys[1]))
-                soundManager.ChangeMasterVolume(-.1f);
+                soundManager.ChangeMasterVolume(-.2f);
 
             #region Demo
 #if DEMO
-
-            #region Object Manager
-            if (keyboardManager.IsFirstKeyPress(Keys.R))
-            {
-                EventDispatcher.Publish(new EventData(
-                EventCategoryType.Object,
-                EventActionType.OnApplyActionToFirstMatchActor,
-                (actor) => actor.StatusType = StatusType.Drawn | StatusType.Update, //Action
-                (actor) => actor.ActorType == ActorType.Decorator
-                && actor.ID.Equals("pyramid1"), //Predicate
-                null //parameters
-                ));
-            }
-            #endregion Object Manager
-
-            #region Sound Demos
-            if (keyboardManager.IsFirstKeyPress(Keys.F1))
-            {
-                // soundManager.Play2D("smokealarm");
-
-                object[] parameters = { "smokealarm" };
-                EventDispatcher.Publish(new EventData(EventCategoryType.Sound,
-                    EventActionType.OnPlay2D, parameters));
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F2))
-            {
-                soundManager.Pause("smokealarm");
-
-                object[] parameters = { "smokealarm" };
-                EventDispatcher.Publish(new EventData(EventCategoryType.Sound,
-                    EventActionType.OnPause, parameters));
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F3))
-            {
-                soundManager.Stop("smokealarm");
-
-                object[] parameters = { "smokealarm" };
-                EventDispatcher.Publish(new EventData(EventCategoryType.Sound,
-                    EventActionType.OnStop, parameters));
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F4))
-            {
-                soundManager.SetMasterVolume(0);
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F5))
-            {
-                soundManager.SetMasterVolume(0.5f);
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F6))
-            {
-                AudioListener listener = new AudioListener();
-                listener.Position = new Vector3(0, 5, 50);
-                listener.Forward = -Vector3.UnitZ;
-                listener.Up = Vector3.UnitY;
-
-                AudioEmitter emitter = new AudioEmitter();
-                emitter.DopplerScale = 1;
-                emitter.Position = new Vector3(0, 5, 0);
-                emitter.Forward = Vector3.UnitZ;
-                emitter.Up = Vector3.UnitY;
-
-                object[] parameters = { "smokealarm", listener, emitter };
-                EventDispatcher.Publish(new EventData(EventCategoryType.Sound,
-                    EventActionType.OnPlay3D, parameters));
-            }
-            #endregion Sound Demos
-
-            #region Menu & UI Demos
-            if (keyboardManager.IsFirstKeyPress(Keys.F9))
-            {
-                EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F10))
-            {
-                EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
-            }
-
-            if (keyboardManager.IsFirstKeyPress(Keys.F5)) //game -> menu
-            {
-                EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
-            }
-            else if (keyboardManager.IsFirstKeyPress(Keys.F6)) //menu -> game
-            {
-                EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-            }
-            #endregion Menu & UI Demos
 
             #region Camera
             if (keyboardManager.IsFirstKeyPress(Keys.C))

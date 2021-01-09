@@ -178,6 +178,8 @@ namespace GDLibrary.Managers
         private AudioListener listener = new AudioListener();
         private AudioEmitter emitter = new AudioEmitter();
         private Transform3D listenerTransform;
+        private float tempVolume;
+        private bool isMuted;
 
         public SoundManager(Game game, StatusType statusType)
             : base(game, statusType)
@@ -236,6 +238,7 @@ namespace GDLibrary.Managers
         public void ChangeMasterVolume(float delta)
         {
             SoundEffect.MasterVolume = MathHelper.Clamp(SoundEffect.MasterVolume + delta, 0, 1);
+            isMuted = SoundEffect.MasterVolume == 0;
         }
 
         public void Play2D(string id) //, bool allowMultipleInstances)
@@ -394,6 +397,21 @@ namespace GDLibrary.Managers
             return false;
         }
 
+        public void ToggleMute()
+        {
+            if (isMuted)
+            {
+                SetMasterVolume(tempVolume);
+                isMuted = false;
+            }
+            else
+            {
+                tempVolume = SoundEffect.MasterVolume;
+                SetMasterVolume(0);
+                isMuted = true;
+            }
+        }
+
         #endregion Sound Controls
 
         //3D Sound Controls
@@ -410,12 +428,6 @@ namespace GDLibrary.Managers
             }
 
             dictionary.Clear();
-        }
-
-        protected override void ApplyUpdate(GameTime gameTime)
-        {
-            //what would we like to do in here?
-            base.ApplyUpdate(gameTime);
         }
     }
 }
