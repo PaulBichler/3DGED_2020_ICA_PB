@@ -5,6 +5,7 @@ namespace GDGame.MyGame.Utilities
 {
     public class Easer
     {
+        //Easing functions taken from https://easings.net/
         public static float ApplyEasing(float x, EasingType easing)
         {
             switch (easing)

@@ -84,7 +84,7 @@ namespace GDGame
 
         private void InitDebug()
         {
-            //InitDebugInfo(true);
+            InitDebugInfo(true);
         }
 
         private void InitDebugInfo(bool bEnable)
@@ -116,6 +116,7 @@ namespace GDGame
 
             //to do..add more sounds
 
+            //All SFX sounds made by Dustyroom (http://dustyroom.com/free-casual-game-sounds/)
             soundManager.Add(new GDLibrary.Managers.Cue("jump", 
                 Content.Load<SoundEffect>("Assets/Audio/Effects/PlayerJump"), SoundCategoryType.Jump, Vector3.One, false));
             soundManager.Add(new GDLibrary.Managers.Cue("shoot", 
@@ -127,6 +128,7 @@ namespace GDGame
             soundManager.Add(new GDLibrary.Managers.Cue("win", 
                 Content.Load<SoundEffect>("Assets/Audio/Effects/WinSound"), SoundCategoryType.WinLose, Vector3.One, false));
 
+            //Music by Zapsplat (https://www.zapsplat.com/music/game-music-tropical-game-fun-light-hearted-steel-drums-caribbean-percussive/)
             soundManager.Add(new GDLibrary.Managers.Cue("music1", 
                 Content.Load<SoundEffect>("Assets/Audio/Music/InGameMusic"), SoundCategoryType.Soundtrack, Vector3.One, true));
         }
@@ -271,7 +273,7 @@ namespace GDGame
             #region Debug
 #if DEBUG
             //debug info
-            InitDebug();
+            //InitDebug();
 #endif
             #endregion Debug
 
@@ -1413,6 +1415,10 @@ namespace GDGame
             fontDictionary.Dispose();
             modelDictionary.Dispose();
             soundManager.Dispose();
+
+            tweeningManager.Dispose();
+            timeManager.Dispose();
+            levelManager.Dispose();
 
             base.UnloadContent();
         }

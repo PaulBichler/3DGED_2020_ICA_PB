@@ -9,43 +9,18 @@ namespace GDGame.MyGame.Managers
 {
     public class MyMenuManager : MenuManager
     {
+        #region Fields
+
         private MouseManager mouseManager;
 
+        #endregion
+
+        #region Constructor & Core
         public MyMenuManager(Game game, StatusType statusType, SpriteBatch spriteBatch,
             MouseManager mouseManager)
             : base(game, statusType, spriteBatch)
         {
             this.mouseManager = mouseManager;
-        }
-
-        public override void HandleEvent(EventData eventData)
-        {
-            if (eventData.EventCategoryType == EventCategoryType.Menu)
-            {
-                switch (eventData.EventActionType)
-                {
-                    case EventActionType.OnPause:
-                        SetMenuVisibility(true);
-                        break;
-                    case EventActionType.OnPlay:
-                        SetMenuVisibility(false);
-                        break;
-                    case EventActionType.OnLose:
-                        SetScene("lose");
-                        //sending new event since other managers are also handling pause
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-                        break;
-                    case EventActionType.OnWin:
-                        SetScene("win");
-                        //sending new event since other managers are also handling pause
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-                        break;
-                    case EventActionType.OnPauseGame:
-                        SetScene("pause");
-                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
-                        break;
-                }
-            }
         }
 
         private void SetMenuVisibility(bool show)
@@ -95,10 +70,10 @@ namespace GDGame.MyGame.Managers
                     SetScene("levelselect");
                     break;
                 case "level1":
-                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart,  new []{ "Level 1" }));
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart, new[] { "Level 1" }));
                     break;
                 case "level2":
-                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart,  new []{ "Level 2" }));
+                    EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnStart, new[] { "Level 2" }));
                     break;
                 case "resume":
                     EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
@@ -116,9 +91,40 @@ namespace GDGame.MyGame.Managers
                 case "restart":
                     EventDispatcher.Publish(new EventData(EventCategoryType.GameState, EventActionType.OnRestart, null));
                     break;
-                default:
-                    break;
             }
-        }
+        } 
+        #endregion
+
+        #region Events
+        public override void HandleEvent(EventData eventData)
+        {
+            if (eventData.EventCategoryType == EventCategoryType.Menu)
+            {
+                switch (eventData.EventActionType)
+                {
+                    case EventActionType.OnPause:
+                        SetMenuVisibility(true);
+                        break;
+                    case EventActionType.OnPlay:
+                        SetMenuVisibility(false);
+                        break;
+                    case EventActionType.OnLose:
+                        SetScene("lose");
+                        //sending new event since other managers are also handling pause
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
+                        break;
+                    case EventActionType.OnWin:
+                        SetScene("win");
+                        //sending new event since other managers are also handling pause
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
+                        break;
+                    case EventActionType.OnPauseGame:
+                        SetScene("pause");
+                        EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPause, null));
+                        break;
+                }
+            }
+        } 
+        #endregion
     }
 }

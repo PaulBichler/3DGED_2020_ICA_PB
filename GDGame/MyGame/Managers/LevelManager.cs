@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using GDLibrary.Actors;
-using GDLibrary.Enums;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using GDLibrary.Utilities;
@@ -19,6 +18,9 @@ namespace GDGame.MyGame.Managers
         public Vector3 Offset;
     }
 
+    /// <summary>
+    /// The Level Manager stores all of the levels with an ID and provides functionality to load them by their ID
+    /// </summary>
     public class LevelManager
     {
         #region Fields
@@ -28,7 +30,7 @@ namespace GDGame.MyGame.Managers
         #endregion
 
         #region Properties
-        public LevelInfo currentLevel { get; private set; }
+        public LevelInfo CurrentLevel { get; private set; }
         public LevelLoader<PrimitiveObject> LevelLoader { get; set; }
         #endregion
 
@@ -40,12 +42,21 @@ namespace GDGame.MyGame.Managers
             levels = new Dictionary<string, LevelInfo>();
         }
 
+        /// <summary>
+        /// Add a level to the game
+        /// </summary>
+        /// <param name="ID">The ID the level will be called by</param>
+        /// <param name="level">The level information</param>
         public void AddLevel(string ID, LevelInfo level)
         {
             if (!levels.ContainsKey(ID))
                 levels.Add(ID, level);
         }
 
+        /// <summary>
+        /// Load a previously added level by ID
+        /// </summary>
+        /// <param name="ID">The ID of the level to load</param>
         public void LoadLevel(string ID)
         {
             if (!levels.ContainsKey(ID))
@@ -56,10 +67,12 @@ namespace GDGame.MyGame.Managers
 
         private void LoadLevel(LevelInfo level)
         {
+            // clear the scene and draw the skybox and ground
             objectManager.Clear();
             main.InitSkybox(1000);
             main.InitGround(1000);
 
+            // load all of the level layers in the level information
             float heightOffset = 0;
             foreach (Texture2D layerTexture in level.LevelLayerTextures)
             {
@@ -75,7 +88,12 @@ namespace GDGame.MyGame.Managers
                 heightOffset += level.LayerHeightOffset;
             }
 
-            currentLevel = level;
+            CurrentLevel = level;
+        }
+
+        public void Dispose()
+        {
+            levels.Clear();
         }
         #endregion
     }

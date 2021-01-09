@@ -10,9 +10,12 @@ namespace GDGame.MyGame.Managers
 {
     public class TweeningManager : PausableGameComponent
     {
+        #region Fields
         private HashSet<Tween> tweens;
         private List<Tween> tweensToAdd, tweensToRemove;
+        #endregion
 
+        #region Constructor & Core
         public TweeningManager(Game game, StatusType statusType) : base(game, statusType)
         {
             tweens = new HashSet<Tween>();
@@ -23,7 +26,7 @@ namespace GDGame.MyGame.Managers
         private void RemoveActorTweens(Actor3D actor)
         {
             foreach (Tween tween in tweens)
-                if(tween.Actor.Equals(actor))
+                if (tween.Actor.Equals(actor))
                     tweensToRemove.Add(tween);
         }
 
@@ -32,7 +35,7 @@ namespace GDGame.MyGame.Managers
             List<Tween> tweens = new List<Tween>();
 
             foreach (Tween tween in this.tweens)
-                if(tween.Actor.Equals(actor))
+                if (tween.Actor.Equals(actor))
                     tweens.Add(tween);
 
             return tweens;
@@ -40,12 +43,13 @@ namespace GDGame.MyGame.Managers
 
         private void AddTween(Tween tween)
         {
-            if(tween != null)
+            if (tween != null)
                 tweensToAdd.Add(tween);
         }
 
         protected override void ApplyUpdate(GameTime gameTime)
         {
+            //Batch remove
             if (tweensToRemove.Count > 0)
             {
                 foreach (Tween tween in tweensToRemove)
@@ -54,6 +58,7 @@ namespace GDGame.MyGame.Managers
                 tweensToRemove.Clear();
             }
 
+            //Batch add
             if (tweensToAdd.Count > 0)
             {
                 foreach (Tween tween in tweensToAdd)
@@ -63,11 +68,21 @@ namespace GDGame.MyGame.Managers
                 tweensToAdd.Clear();
             }
 
+            //Update all of the animations and remove the finished ones
             foreach (Tween tween in tweens)
-                if(tween.Process(gameTime))
+                if (tween.Process(gameTime))
                     tweensToRemove.Add(tween);
         }
 
+        public new void Dispose()
+        {
+            tweens.Clear();
+            tweensToRemove.Clear();
+            tweensToAdd.Clear();
+        }
+        #endregion
+
+        #region Events
         public override void SubscribeToEvents()
         {
             base.SubscribeToEvents();
@@ -105,6 +120,7 @@ namespace GDGame.MyGame.Managers
             else if (eventData.EventCategoryType == EventCategoryType.Object)
                 if (eventData.EventActionType == EventActionType.OnRemoveActor)
                     RemoveActorTweens(eventData.Parameters[0] as Actor3D);
-        }
+        } 
+        #endregion
     }
 }

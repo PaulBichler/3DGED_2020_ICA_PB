@@ -9,11 +9,14 @@ namespace GDGame.MyGame.Controllers
 {
     public class PlayerFollowCameraController : Controller
     {
+        #region Fields
         private Transform3D targetActorTransform, parentTransform;
         private float angle, distance;
         private Vector3 look;
         private float initialY;
+        #endregion
 
+        #region Constructor & Core
         public PlayerFollowCameraController(string id, ControllerType controllerType, Transform3D targetActorTransform, float angle, float distance) : base(id, controllerType)
         {
             this.angle = angle;
@@ -21,6 +24,10 @@ namespace GDGame.MyGame.Controllers
             this.targetActorTransform = targetActorTransform;
         }
 
+        /// <summary>
+        /// Set the follow target of the camera
+        /// </summary>
+        /// <param name="target">The target to follow</param>
         public void SetTargetTransform(Transform3D target)
         {
             if (target == null) return;
@@ -30,6 +37,7 @@ namespace GDGame.MyGame.Controllers
             if (parentTransform != null)
                 parentTransform.Translation = target.Translation;
 
+            //Modify the look (needs to be done only once since we don't allow rotation by input)
             look = Vector3.Transform(targetActorTransform.Look, Matrix.CreateFromAxisAngle(targetActorTransform.Right, MathHelper.ToRadians(angle)));
             look.Normalize();
         }
@@ -42,9 +50,10 @@ namespace GDGame.MyGame.Controllers
                 SetTargetTransform(targetActorTransform);
             }
 
-            if (targetActorTransform == null || parentTransform == null) 
+            if (targetActorTransform == null || parentTransform == null)
                 return;
 
+            //Update the camera's position 
             Vector3 targetActorTranslation = targetActorTransform.Translation;
             targetActorTranslation.Y = initialY;
             Vector3 newTranslation = targetActorTranslation + look * distance;
@@ -52,5 +61,11 @@ namespace GDGame.MyGame.Controllers
             parentTransform.Translation = newTranslation;
             parentTransform.Look = -look;
         }
+
+        public new object Clone()
+        {
+            return new PlayerFollowCameraController(ID, ControllerType, targetActorTransform, angle, distance);
+        } 
+        #endregion
     }
 }

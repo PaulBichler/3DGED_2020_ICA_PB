@@ -8,7 +8,6 @@ using GDGame;
 using GDGame.MyGame.Actors;
 using GDGame.MyGame.Controllers;
 using GDGame.MyGame.Enums;
-using GDGame.MyGame.Managers;
 using GDGame.MyGame.Utilities;
 using GDLibrary.Enums;
 using GDLibrary.Events;

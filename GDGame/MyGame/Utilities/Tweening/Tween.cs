@@ -43,9 +43,14 @@ namespace GDGame.MyGame.Utilities
             childActors = new List<Actor3D>();
             currentTimeInMs = timeInMs;
 
-            Reset();
+            Init();
         }
 
+        /// <summary>
+        /// Update the animation
+        /// </summary>
+        /// <param name="gameTime">Used to get the time passed since the last update</param>
+        /// <returns>Return true if the animation is finished, false otherwise</returns>
         public virtual bool Process(GameTime gameTime)
         {
             if (Actor == null || (Actor.StatusType & StatusType.Update) != StatusType.Update)
@@ -55,6 +60,10 @@ namespace GDGame.MyGame.Utilities
             return true;
         }
 
+        /// <summary>
+        /// Called when the animation is finished
+        /// </summary>
+        /// <returns>returns true if the animation is done, false if it is reset or continues</returns>
         protected virtual bool FinalProcess()
         {
             switch (LoopType)
@@ -78,15 +87,19 @@ namespace GDGame.MyGame.Utilities
                         destination += relativeDestination;
                     }
                     else
-                        Reset();
+                        Init();
                     break;
             }
 
             return false;
         }
 
-        protected abstract void Reset();
+        protected abstract void Init();
 
+        /// <summary>
+        /// Computes the next key in the animation
+        /// </summary>
+        /// <returns>Returns the next position, scale or rotation</returns>
         protected Vector3 ComputeNextValue()
         {
             float x = 1f - (float)currentTimeInMs / TimeInMs;
@@ -98,11 +111,19 @@ namespace GDGame.MyGame.Utilities
             return vectorToApply;
         }
 
+        /// <summary>
+        /// Add a child to the animation. The animation will be applied to the child aswell
+        /// </summary>
+        /// <param name="child">The child actor to add</param>
         public void AddChild(Actor3D child)
         {
             childActors.Add(child);
         }
 
+        /// <summary>
+        /// Remove a child 
+        /// </summary>
+        /// <param name="child">The child actor to remove</param>
         public void RemoveChild(Actor3D child)
         {
             childActors.Remove(child);
@@ -162,7 +183,7 @@ namespace GDGame.MyGame.Utilities
             return false;
         }
 
-        protected override void Reset()
+        protected override void Init()
         {
             origin = previous = Actor.Transform3D.Translation;
         }
@@ -216,7 +237,7 @@ namespace GDGame.MyGame.Utilities
             return false;
         }
 
-        protected override void Reset()
+        protected override void Init()
         {
             origin = previous = Actor.Transform3D.Scale;
         }
@@ -270,7 +291,7 @@ namespace GDGame.MyGame.Utilities
             return false;
         }
 
-        protected override void Reset()
+        protected override void Init()
         {
             origin = previous = Actor.Transform3D.RotationInDegrees;
         }
