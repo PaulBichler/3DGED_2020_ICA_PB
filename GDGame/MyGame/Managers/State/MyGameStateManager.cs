@@ -61,15 +61,13 @@ namespace GDLibrary.Core.Managers.State
                         StartGame(currentLevelId);
                         break;
                     case EventActionType.OnSpawn:
-                        //get a reference to the player to set the target in the follow camera
                         player = eventData.Parameters[0] as Actor3D;
                         EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnSetListener, new [] { player.Transform3D }));
                         (cameraManager[1].ControllerList.Find(c => c is PlayerFollowCameraController) as PlayerFollowCameraController).SetTargetTransform(player.Transform3D);
                         break;
                     case EventActionType.OnStarPickup:
-                        stars++;
                         EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "star" }));
-                        EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnStarPickup, new object[] { stars }));
+                        EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnStarPickup, new object[] { ++stars }));
                         break;
                 }
             }
@@ -80,6 +78,7 @@ namespace GDLibrary.Core.Managers.State
 
         private void StartGame(string levelId)
         {
+            //load the level and reset the game state
             levelManager.LoadLevel(levelId);
             hasGameStarted = true;
             currentLevelId = levelId;
@@ -88,24 +87,32 @@ namespace GDLibrary.Core.Managers.State
             //Start the intro curve camera
             cameraManager[0].ControllerList.Add(new Curve3DController("Start Curve Camera", ControllerType.Curve, levelManager.currentLevel.StartCameraCurve));
             cameraManager.ActiveCameraIndex = 0;
+
+            //hide the menu and reset the HUD
             EventDispatcher.Publish(new EventData(EventCategoryType.Menu, EventActionType.OnPlay, null));
             EventDispatcher.Publish(new EventData(EventCategoryType.UI, EventActionType.OnStarPickup, new object[] { stars }));
 
             //Switch to player camera after curve has been completed
-            TimeManager.ExecuteInSeconds("Camera Switch", 9, SwitchCamera);
+            TimeManager.ExecuteInSeconds("Intro End", 9, ActivatePlayer);
         }
 
-        private void SwitchCamera()
+        private void ActivatePlayer()
         {
+            //activate the player and switch to the player camera
             player.StatusType = StatusType.Update | StatusType.Drawn;
             cameraManager.CycleActiveCamera();
+
+            //some entities need to have a reference to the player 
+            EventDispatcher.Publish(new EventData(EventCategoryType.Player, EventActionType.OnSpawn, new [] { player }));
         }
 
         private void EndGame(EventActionType endState)
         {
+            //display menu
             hasGameStarted = false;
             EventDispatcher.Publish(new EventData(EventCategoryType.Menu, endState, null));
 
+            //win or lose sound?
             if(endState == EventActionType.OnWin)
                 EventDispatcher.Publish(new EventData(EventCategoryType.Sound, EventActionType.OnPlay2D, new object[] { "win" }));
             else if(endState == EventActionType.OnLose)

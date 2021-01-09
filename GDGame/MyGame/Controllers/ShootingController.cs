@@ -15,7 +15,7 @@ namespace GDGame.MyGame.Controllers
 {
     public class ShootingController : Controller
     {
-        private Transform3D parentTransform;
+        private Transform3D parentTransform, playerTransform;
         private CollidableProjectile projectileArchetype;
         private List<Vector3> launchDirections;
         private float maxDistance;
@@ -26,6 +26,14 @@ namespace GDGame.MyGame.Controllers
             this.projectileArchetype = projectile;
             this.maxDistance = maxDistance;
             this.unitSpeedInMs = unitSpeedInMs;
+
+            EventDispatcher.Subscribe(EventCategoryType.Player, HandleGameStateEvent);
+        }
+
+        private void HandleGameStateEvent(EventData eventData)
+        {
+            if (eventData.EventActionType == EventActionType.OnSpawn)
+                playerTransform = eventData.Parameters[0] as Transform3D;
         }
 
         private void Initialize(Actor3D parent)
@@ -37,20 +45,25 @@ namespace GDGame.MyGame.Controllers
             launchDirections = new List<Vector3> {parentTransform.Right, -parentTransform.Right, parentTransform.Look, -parentTransform.Look};
             EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new object[]
             {
-                new RotationTween(parent, 2000, new Vector3(0, 45, 0), true, LaunchProjectiles, LoopType.Repeat),
-                new ScaleTween(parent, 1000, Vector3.One * 1.5f, false, null, LoopType.ReverseAndRepeat) 
+                new RotationTween(parent, GameConstants.Projectile_CooldownInMs, 
+                    new Vector3(0, 45, 0), true, LaunchProjectiles, LoopType.Repeat),
+                new ScaleTween(parent, GameConstants.Projectile_CooldownInMs / 2, 
+                    Vector3.One * 1.5f, false, null, LoopType.ReverseAndRepeat) 
             }));
         }
 
         private void LaunchProjectiles(Actor3D actor)
         {
+            //Only shoot if the player is within activation range
+            if (playerTransform == null || Vector3.Distance(parentTransform.Translation, playerTransform.Translation) >
+                GameConstants.Projectile_ActivationDistance)
+                return;
+
             for (int i = 0; i < launchDirections.Count; i++)
             {
                 CollidableProjectile projectile = projectileArchetype.Clone() as CollidableProjectile;
                 projectile.Transform3D.Translation = parentTransform.Translation;
                 launchDirections[i] = Vector3.Transform(launchDirections[i], Quaternion.CreateFromAxisAngle(Vector3.Up, 45));
-                
-                projectile.Transform3D.RotateBy(Vector3.Up * CustomHelper.GetAngleBetweenVectors(projectile.Transform3D.Look, launchDirections[i]));
 
                 EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnAddActor, new [] { projectile }));
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new []

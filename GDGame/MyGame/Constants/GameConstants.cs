@@ -45,13 +45,6 @@ namespace GDGame
 
         #endregion String IDs
 
-        #region Player Follow Camera
-
-        public static readonly float PlayerFollowCamera_ElevationAngle = 50f;
-        public static readonly float PlayerFollowCamera_DistanceToPlayer = 15f;
-
-        #endregion
-
         #region Collidable First Person Camera
 
         public static readonly Keys[] CameraMoveKeys =
@@ -98,14 +91,29 @@ namespace GDGame
 
         #endregion Security Camera
 
+
+
         #region Sound Controls
         public static readonly Keys[] SoundControlKeys = {
             Keys.N, Keys.B, Keys.M
         }; 
         #endregion
 
-        public static readonly int Player_MovementTimeInMs = 300;
+        #region Player Follow Camera
 
-        public static readonly float Projectile_Cooldown = 1.5f;
+        public static readonly float PlayerFollowCamera_ElevationAngle = 50f;
+        public static readonly float PlayerFollowCamera_DistanceToPlayer = 15f;
+
+        #endregion
+
+        #region Player
+        public static readonly int Player_MovementTimeInMs = 300;
+        #endregion
+
+        #region Shooter
+        public static readonly int Projectile_CooldownInMs = 2000;
+        public static readonly int Projectile_UnitMoveTimeInMs = 500;
+        public static readonly float Projectile_ActivationDistance = 15f; 
+        #endregion
     }
 }

@@ -774,7 +774,7 @@ namespace GDGame
             texture = textureDictionary["WinScreenTitle"];
             imageDimensions = new Integer2(texture.Width, texture.Height);
             origin = new Vector2(texture.Width / 2, texture.Height / 2);
-            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One, origin, imageDimensions);
+            transform2D = new Transform2D(screenCentre + new Vector2(0, -200), 0, Vector2.One / 2, origin, imageDimensions);
             uiObject = new UITextureObject("Win Title", ActorType.UITextureObject,
                 StatusType.Update | StatusType.Drawn, transform2D,
                 Color.White, 1, SpriteEffects.None, texture,
