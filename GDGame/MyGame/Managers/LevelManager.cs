@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GDLibrary.Actors;
+using GDLibrary.Enums;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using GDLibrary.Utilities;
@@ -21,6 +22,7 @@ namespace GDGame.MyGame.Managers
     public class LevelManager
     {
         #region Fields
+        private Main main;
         private ObjectManager objectManager;
         private Dictionary<string, LevelInfo> levels;
         #endregion
@@ -31,8 +33,9 @@ namespace GDGame.MyGame.Managers
         #endregion
 
         #region Constructor & Core
-        public LevelManager(ObjectManager objectManager)
+        public LevelManager(Main game, ObjectManager objectManager)
         {
+            this.main = game;
             this.objectManager = objectManager;
             levels = new Dictionary<string, LevelInfo>();
         }
@@ -54,6 +57,8 @@ namespace GDGame.MyGame.Managers
         private void LoadLevel(LevelInfo level)
         {
             objectManager.Clear();
+            main.InitSkybox(1000);
+            main.InitGround(1000);
 
             float heightOffset = 0;
             foreach (Texture2D layerTexture in level.LevelLayerTextures)
@@ -71,7 +76,7 @@ namespace GDGame.MyGame.Managers
             }
 
             currentLevel = level;
-        } 
+        }
         #endregion
     }
 }

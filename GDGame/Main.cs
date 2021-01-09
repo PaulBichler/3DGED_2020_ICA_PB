@@ -164,9 +164,10 @@ namespace GDGame
         private void LoadTextures()
         {
             //level 1 where each image 1_1, 1_2 is a different Y-axis height specificied when we use the level loader
-            textureDictionary.Load("Assets/Textures/Level/level_1");
+            textureDictionary.Load("Assets/Textures/Level/level_1_1");
             textureDictionary.Load("Assets/Textures/Level/level_1_2");
-            //add more levels here...
+            textureDictionary.Load("Assets/Textures/Level/level_2_1");
+            textureDictionary.Load("Assets/Textures/Level/level_2_2");
 
             //sky
             textureDictionary.Load("Assets/Textures/Skybox/back");
@@ -826,12 +827,12 @@ namespace GDGame
         {
             //create the camera curve to be applied to the track controller
             Transform3DCurve curveA = new Transform3DCurve(CurveLoopType.Oscillate);
-            curveA.Add(new Vector3(25f, 10, 60), new Vector3(0, -0.6f, -0.8f), new Vector3(0, 0.8f, -0.6f), 0);
-            curveA.Add(new Vector3(-0.5f, 10, 34), new Vector3(1f, -0.2f, 0f), new Vector3(0, 1f, 0), 2000);
-            curveA.Add(new Vector3(50, 10, 26), new Vector3(-1f, -0.1f, -0.3f), new Vector3(-0.1f, 1f, 0), 4000);
-            curveA.Add(new Vector3(-0.5f, 10, 10), new Vector3(1f, -0.1f, -0.2f), new Vector3(0.1f, 1f, 0), 6000);
-            curveA.Add(new Vector3(25f, 10, -9), new Vector3(0, -0.4f, 1f), new Vector3(0, 0.9f, 0.4f), 7000);
-            curveA.Add(new Vector3(25f, 10, 60), new Vector3(0, -0.6f, -0.8f), new Vector3(0, 0.8f, -0.6f), 9000);
+            curveA.Add(new Vector3(12.5f, 10, 70), new Vector3(0, -0.6f, -0.8f), new Vector3(0, 0.8f, -0.6f), 0);
+            curveA.Add(new Vector3(-10.5f, 10, 34), new Vector3(1f, -0.2f, 0f), new Vector3(0, 1f, 0), 2000);
+            curveA.Add(new Vector3(35, 10, 26), new Vector3(-1f, -0.1f, -0.3f), new Vector3(-0.1f, 1f, 0), 4000);
+            curveA.Add(new Vector3(-10.5f, 10, 10), new Vector3(1f, -0.1f, -0.2f), new Vector3(0.1f, 1f, 0), 6000);
+            curveA.Add(new Vector3(12.5f, 10, -9), new Vector3(0, -0.4f, 1f), new Vector3(0, 0.9f, 0.4f), 7000);
+            curveA.Add(new Vector3(12.5f, 10, 70), new Vector3(0, -0.6f, -0.8f), new Vector3(0, 0.8f, -0.6f), 9000);
 
             //add to the dictionary
             transform3DCurveDictionary.Add("Start Camera Curve", curveA);
@@ -912,7 +913,7 @@ namespace GDGame
             Components.Add(timeManager);
 
             //stores all the levels and loads them when necessary
-            levelManager = new LevelManager(objectManager);
+            levelManager = new LevelManager(this, objectManager);
 
             //Game State
             gameStateManager = new MyGameStateManager(this, StatusType.Update, cameraManager, levelManager, keyboardManager);
@@ -1300,22 +1301,6 @@ namespace GDGame
 
         private void InitLevel(float worldScale)//, List<string> levelNames)
         {
-            //remove any old content (e.g. on restart or next level)
-            objectManager.Clear();
-
-            /************ Non-collidable ************/
-            //adds origin helper etc
-            InitHelpers();
-
-            //add skybox
-            InitSkybox(worldScale);
-
-            //add grass plane
-            InitGround(worldScale);
-
-            //pyramids
-            InitDecorators();
-
             /************ Level-loader (can be collidable or non-collidable) ************/
             levelManager.LevelLoader = new LevelLoader<PrimitiveObject>(
                 this.archetypeDictionary, this.textureDictionary);
@@ -1324,7 +1309,7 @@ namespace GDGame
             LevelInfo level = new LevelInfo
             {
                 Name = "Level 1",
-                LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1"], textureDictionary["level_1_2"] },
+                LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1_1"], textureDictionary["level_1_2"] },
                 StartCameraCurve = transform3DCurveDictionary["Start Camera Curve"],
                 xScale = 1,
                 zScale = 1,
@@ -1338,7 +1323,7 @@ namespace GDGame
             level = new LevelInfo
             {
                 Name = "Level 2",
-                LevelLayerTextures = new List<Texture2D> { textureDictionary["level_1"], textureDictionary["level_1_2"] },
+                LevelLayerTextures = new List<Texture2D> { textureDictionary["level_2_1"], textureDictionary["level_2_2"] },
                 StartCameraCurve = transform3DCurveDictionary["Start Camera Curve"],
                 xScale = 1,
                 zScale = 1,
@@ -1365,17 +1350,19 @@ namespace GDGame
             objectManager.Add(originHelper);
         }
 
-        private void InitGround(float worldScale)
+        public void InitGround(float worldScale)
         {
             PrimitiveObject drawnActor3D = archetypeDictionary[GameConstants.Primitive_UnlitTexturedQuad].Clone() as PrimitiveObject;
             drawnActor3D.ActorType = ActorType.Ground;
-            drawnActor3D.EffectParameters.Texture = textureDictionary["grass1"];
+            drawnActor3D.EffectParameters.Texture = textureDictionary["White"];
+            drawnActor3D.EffectParameters.DiffuseColor = Color.LightBlue;
+            drawnActor3D.Transform3D.TranslateBy(new Vector3(0, -5, 0));
             drawnActor3D.Transform3D.RotationInDegrees = new Vector3(-90, 0, 0);
             drawnActor3D.Transform3D.Scale = worldScale * Vector3.One;
             objectManager.Add(drawnActor3D);
         }
 
-        private void InitSkybox(float worldScale)
+        public void InitSkybox(float worldScale)
         {
             PrimitiveObject drawnActor3D = null;
 

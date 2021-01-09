@@ -328,7 +328,7 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/GameObjects/White.png
 
-#begin Assets/Textures/Level/level_1.png
+#begin Assets/Textures/Level/level_1_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -338,7 +338,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Assets/Textures/Level/level_1.png
+/build:Assets/Textures/Level/level_1_1.png
 
 #begin Assets/Textures/Level/level_1_2.png
 /importer:TextureImporter
@@ -352,7 +352,7 @@
 /processorParam:TextureFormat=Color
 /build:Assets/Textures/Level/level_1_2.png
 
-#begin Assets/Textures/Level/level_test.png
+#begin Assets/Textures/Level/Level_2_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -362,9 +362,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Assets/Textures/Level/level_test.png
+/build:Assets/Textures/Level/Level_2_1.png
 
-#begin Assets/Textures/Level/level1_1.png
+#begin Assets/Textures/Level/level_2_2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -374,19 +374,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Assets/Textures/Level/level1_1.png
-
-#begin Assets/Textures/Level/level1_2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Assets/Textures/Level/level1_2.png
+/build:Assets/Textures/Level/level_2_2.png
 
 #begin Assets/Textures/Props/Crates/crate1.jpg
 /importer:TextureImporter
