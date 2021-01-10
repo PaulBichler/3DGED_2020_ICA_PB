@@ -983,7 +983,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[12] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, -1, 0), //normal
                 new Vector2(1, 1));
 
             //top
@@ -995,7 +995,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[14] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, -length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, -1, 0), //normal
                 new Vector2(0, 1));
             #endregion
 
@@ -1003,7 +1003,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[15] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, -length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, -1, 0), //normal
                 new Vector2(1, 1));
 
             //top
@@ -1015,7 +1015,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[17] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, -1, 0), //normal
                 new Vector2(0, 1));
             #endregion
 
@@ -1023,7 +1023,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[18] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(0, -1, 1), //normal
                 new Vector2(1, 1));
 
             //top
@@ -1035,7 +1035,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[20] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(0, -1, 1), //normal
                 new Vector2(0, 1));
             #endregion
 
@@ -1043,7 +1043,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[21] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, -length),
-                new Vector3(0, 1, -1), //normal
+                new Vector3(0, -1, -1), //normal
                 new Vector2(1, 1));
 
             //top
@@ -1055,7 +1055,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[23] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, -length),
-                new Vector3(0, 1, -1), //normal
+                new Vector3(0, -1, -1), //normal
                 new Vector2(0, 1));
             #endregion
 
@@ -1064,7 +1064,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[24] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, -length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, -1, 0), //normal
                 new Vector2(0, 1));
 
             //top
@@ -1076,7 +1076,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[26] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, -1, 0), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1090,7 +1090,7 @@ namespace GDLibrary.Factories
             //top
             vertices[28] = new VertexPositionNormalTexture(
                 new Vector3(-0.5f, 0, 0),
-                new Vector3(1, -1, 0), //normal
+                new Vector3(1, 1, 0), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
@@ -1104,19 +1104,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[30] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(-1, 0, 1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[31] = new VertexPositionNormalTexture(
                 new Vector3(-0.5f, 0, 0),
-                new Vector3(0, -1, 1), //normal
+                new Vector3(-1, 0, 1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[32] = new VertexPositionNormalTexture(
                 new Vector3(-length, length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(-1, 0, 1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1130,7 +1130,7 @@ namespace GDLibrary.Factories
             //top
             vertices[34] = new VertexPositionNormalTexture(
                 new Vector3(-0.5f, 0, 0),
-                new Vector3(0, -1, -1), //normal
+                new Vector3(0, 1, -1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
@@ -1145,19 +1145,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[36] = new VertexPositionNormalTexture(
                 new Vector3(length, length, -length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(1, 1, 0), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[37] = new VertexPositionNormalTexture(
                 new Vector3(0.5f, 0, 0),
-                new Vector3(-1, -1, 0), //normal
+                new Vector3(1, 1, 0), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[38] = new VertexPositionNormalTexture(
                 new Vector3(length, length, length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(1, 1, 0), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1165,7 +1165,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[39] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, -1, 0), //normal
                 new Vector2(0, 1));
 
             //top
@@ -1177,7 +1177,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[41] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, -length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, -1, 0), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1185,19 +1185,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[42] = new VertexPositionNormalTexture(
                 new Vector3(length, length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(1, 0, 1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[43] = new VertexPositionNormalTexture(
                 new Vector3(0.5f, 0, 0),
-                new Vector3(0, -1, 1), //normal
+                new Vector3(1, 0, 1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[44] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(1, 0, 1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1205,19 +1205,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[45] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, -length),
-                new Vector3(0, 1, -1), //normal
+                new Vector3(1, 0, -1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[46] = new VertexPositionNormalTexture(
                 new Vector3(0.5f, 0, 0),
-                new Vector3(0, -1, -1), //normal
+                new Vector3(1, 0, -1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[47] = new VertexPositionNormalTexture(
                 new Vector3(length, length, -length),
-                new Vector3(0, 1, -1), //normal
+                new Vector3(1, 0, -1), //normal
                 new Vector2(1, 1)); 
             #endregion
 
@@ -1226,19 +1226,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[48] = new VertexPositionNormalTexture(
                 new Vector3(-length, length, length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, 0, 1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[49] = new VertexPositionNormalTexture(
                 new Vector3(0, 0, 0.5f),
-                new Vector3(-1, -1, 0), //normal
+                new Vector3(-1, 0, 1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[50] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, 0, 1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1246,19 +1246,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[51] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, 0, 1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[52] = new VertexPositionNormalTexture(
                 new Vector3(0, 0, 0.5f),
-                new Vector3(1, -1, 0), //normal
+                new Vector3(1, 0, 1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[53] = new VertexPositionNormalTexture(
                 new Vector3(length, length, length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, 0, 1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1266,7 +1266,7 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[54] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(0, -1, 1), //normal
                 new Vector2(0, 1));
 
             //top
@@ -1278,7 +1278,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[56] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(0, -1, 1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1298,7 +1298,7 @@ namespace GDLibrary.Factories
             //top
             vertices[59] = new VertexPositionNormalTexture(
                 new Vector3(0, 0, 0.5f),
-                new Vector3(0, -1, -1), //normal
+                new Vector3(0, 1, -1), //normal
                 new Vector2(0.5f, 0));
             #endregion
 
@@ -1307,19 +1307,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[60] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, -length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, 0, -1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[61] = new VertexPositionNormalTexture(
                 new Vector3(0, 0, -0.5f),
-                new Vector3(-1, -1, 0), //normal
+                new Vector3(-1, 0, -1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[62] = new VertexPositionNormalTexture(
                 new Vector3(-length, length, -length),
-                new Vector3(-1, 1, 0), //normal
+                new Vector3(-1, 0, -1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1327,19 +1327,19 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[63] = new VertexPositionNormalTexture(
                 new Vector3(length, length, -length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, 0, -1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[64] = new VertexPositionNormalTexture(
                 new Vector3(0, 0, -0.5f),
-                new Vector3(1, -1, 0), //normal
+                new Vector3(1, 0, -1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[65] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, -length),
-                new Vector3(1, 1, 0), //normal
+                new Vector3(1, 0, -1), //normal
                 new Vector2(1, 1));
             #endregion
 
@@ -1347,27 +1347,27 @@ namespace GDLibrary.Factories
             //bottom left
             vertices[66] = new VertexPositionNormalTexture(
                 new Vector3(-length, length, -length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(0, 1, -1), //normal
                 new Vector2(0, 1));
 
             //top
             vertices[67] = new VertexPositionNormalTexture(
                 new Vector3(0, 0, -0.5f),
-                new Vector3(0, -1, 1), //normal
+                new Vector3(0, 1, -1), //normal
                 new Vector2(0.5f, 0));
 
             //bottom right
             vertices[68] = new VertexPositionNormalTexture(
                 new Vector3(length, length, -length),
-                new Vector3(0, 1, 1), //normal
+                new Vector3(0, 1, -1), //normal
                 new Vector2(1, 1));
             #endregion
 
-            #region Front Pyramid back face (-ve Z-axis)
+            #region Back Pyramid back face (-ve Z-axis)
             //bottom left
             vertices[69] = new VertexPositionNormalTexture(
                 new Vector3(-length, -length, -length),
-                new Vector3(0, 1, -1), //normal
+                new Vector3(0, -1, -1), //normal
                 new Vector2(0, 1));
 
             //top
@@ -1379,7 +1379,7 @@ namespace GDLibrary.Factories
             //bottom right
             vertices[70] = new VertexPositionNormalTexture(
                 new Vector3(length, -length, -length),
-                new Vector3(0, 1, -1), //normal
+                new Vector3(0, -1, -1), //normal
                 new Vector2(1, 1));
             #endregion
 

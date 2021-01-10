@@ -943,37 +943,10 @@ namespace GDGame
             Transform3D transform3D = null;
             EffectParameters effectParameters = null;
             IVertexData vertexData = null;
+            VertexPositionNormalTexture[] vertices;
             PrimitiveType primitiveType;
             int primitiveCount;
 
-            #region Lit Textured Pyramid
-
-            /*********** Transform, Vertices and VertexData ***********/
-            //lit pyramid
-            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                 Vector3.One, Vector3.UnitZ, Vector3.UnitY);
-            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
-
-            VertexPositionNormalTexture[] vertices
-                = VertexFactory.GetVerticesPositionNormalTexturedPyramid(out primitiveType,
-                out primitiveCount);
-
-            //analog of the Model class in G-CA (i.e. it holdes vertices and type, count)
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices,
-                primitiveType, primitiveCount);
-
-            /*********** PrimitiveObject ***********/
-            //now we use the "FBX" file (our vertexdata) and make a PrimitiveObject
-            PrimitiveObject primitiveObject = new PrimitiveObject(
-                GameConstants.Primitive_LitTexturedPyramid,
-                ActorType.Decorator, //we could specify any time e.g. Pickup
-                StatusType.Drawn,
-                transform3D, effectParameters,
-                vertexData);
-
-            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
-            #endregion Lit Textured Pyramid
 
             #region Unlit Textured Quad
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
