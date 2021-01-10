@@ -319,31 +319,6 @@ namespace GDGame
             Texture2D texture = null;
             SpriteFont spriteFont = null;
 
-            #region Mouse Reticule & Text
-            texture = textureDictionary["reticuleDefault"];
-
-            transform2D = new Transform2D(
-                new Vector2(512, 384), //this value doesnt matter since we will recentre in UIMouseObject::Update()
-                0,
-                 Vector2.One,
-                new Vector2(texture.Width / 2, texture.Height / 2),
-                new Integer2(45, 46)); //read directly from the PNG file dimensions
-
-            UIMouseObject uiMouseObject = new UIMouseObject("reticule", ActorType.UIMouse,
-                StatusType.Update | StatusType.Drawn, transform2D, Color.White,
-                SpriteEffects.None, fontDictionary["menu"],
-                "Hello there!",
-                new Vector2(0, -40),
-                Color.Yellow,
-                0.75f * Vector2.One,
-                0,
-                texture,
-                new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height), //how much of source image do we want to draw?
-                mouseManager);
-
-            uiManager.Add(uiMouseObject);
-            #endregion Mouse Reticule & Text
-
             #region Star Progress
             //Foreground
             texture = textureDictionary["StarsFilledHud"];
@@ -369,28 +344,6 @@ namespace GDGame
             uiManager.Add(uiTextureObject);
             #endregion Star Progress
 
-            #region Text Object
-            spriteFont = Content.Load<SpriteFont>("Assets/Fonts/debug");
-
-            //calculate how big the text is in (w,h)
-            string text = "Hello World!!!";
-            Vector2 originalDimensions = spriteFont.MeasureString(text);
-
-            transform2D = new Transform2D(new Vector2(512, 768 - (originalDimensions.Y * 4)),
-                0,
-                4 * Vector2.One,
-                new Vector2(originalDimensions.X / 2, originalDimensions.Y / 2), //this is text???
-                new Integer2(originalDimensions)); //accurate original dimensions
-
-            UITextObject uiTextObject = new UITextObject("hello", ActorType.UIText,
-                StatusType.Update | StatusType.Drawn, transform2D, new Color(0.1f, 0, 0, 1),
-                0, SpriteEffects.None, text, spriteFont);
-
-            uiTextObject.ControllerList.Add(new UIMouseOverController("moc1", ControllerType.MouseOver,
-                 mouseManager, Color.Red, Color.White));
-
-            uiManager.Add(uiTextObject);
-            #endregion Text Object
         }
 
         private void InitMenu()
@@ -944,6 +897,8 @@ namespace GDGame
             cameraManager.Add(camera3D); 
             #endregion
 
+
+
             #region Noncollidable Camera - Flight
 
             transform3D = new Transform3D(new Vector3(10, 10, 20),
@@ -983,7 +938,7 @@ namespace GDGame
         ///    5. Add archetypal object to archetypeDictionary
         ///    6. Clone archetype, change its properties (transform, texture, color, alpha, ID) and add manually to the objectmanager or you can use LevelLoader.
         /// </summary>
-        private void InitArchetypes() //formerly InitTexturedQuad
+        private void InitArchetypes()
         {
             Transform3D transform3D = null;
             EffectParameters effectParameters = null;
@@ -1016,15 +971,6 @@ namespace GDGame
                 StatusType.Drawn,
                 transform3D, effectParameters,
                 vertexData);
-
-            /*********** Controllers (optional) ***********/
-            //we could add controllers to the archetype and then all clones would have cloned controllers
-            //  drawnActor3D.ControllerList.Add(
-            //new RotationController("rot controller1", ControllerType.RotationOverTime,
-            //1, new Vector3(0, 1, 0)));
-
-            //to do...add demos of controllers on archetypes
-            //ensure that the Clone() method of PrimitiveObject will Clone() all controllers
 
             archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
             #endregion Lit Textured Pyramid
@@ -1071,44 +1017,6 @@ namespace GDGame
 
             //add more archetypes here...
 
-            #region Lit Textured Octahedron
-            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
-            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
-
-            vertices = VertexFactory.GetVerticesPositionNormalTexturedOctahedron(out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
-
-            primitiveObject = new PrimitiveObject(
-                GameConstants.Primitive_LitTexturedOctahedron,
-                ActorType.Decorator,
-                StatusType.Drawn,
-                transform3D, effectParameters,
-                vertexData);
-
-            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
-            #endregion
-
-            #region Lit Textured Spiked Cube
-            transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                Vector3.One, Vector3.UnitZ, Vector3.UnitY);
-            effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
-
-            vertices = VertexFactory.GetVerticesPositionNormalTexturedSpikedCube(out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
-            primitiveObject = new PrimitiveObject(
-                GameConstants.Primitive_LitTexturedTest,
-                ActorType.Decorator, //we could specify any time e.g. Pickup
-                StatusType.Drawn,
-                transform3D, effectParameters,
-                vertexData);
-
-            archetypeDictionary.Add(primitiveObject.ID, primitiveObject);
-            #endregion
-
-
             /*---------------Collidables-------------*/
 
             CollidablePrimitiveObject collidable;
@@ -1134,7 +1042,7 @@ namespace GDGame
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["Grass"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Grass,
                 ActorType.GrassTile,
@@ -1150,7 +1058,7 @@ namespace GDGame
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["Road"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Road,
                 ActorType.Decorator,
@@ -1166,7 +1074,7 @@ namespace GDGame
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["Water"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 GameConstants.Water,
                 ActorType.WaterTile,
@@ -1193,11 +1101,11 @@ namespace GDGame
 
             #region Moving Obstacle
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One / 2, Vector3.UnitZ, Vector3.UnitY);
+                    new Vector3(.9f, .9f, .9f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["White"], Color.White, 1);
-            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedPyramid(out primitiveType, out primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 "Obstacle",
                 ActorType.Obstacle, StatusType.Drawn | StatusType.Update,
@@ -1213,7 +1121,7 @@ namespace GDGame
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["WaterPlatform"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 "Water Platform",
                 ActorType.WaterPlatform, StatusType.Drawn | StatusType.Update,
@@ -1229,7 +1137,7 @@ namespace GDGame
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["BlockingObstacle"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(
                 "Blocking Obstacle",
                 ActorType.BlockingObstacle, StatusType.Drawn | StatusType.Update,
