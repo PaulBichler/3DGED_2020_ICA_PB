@@ -111,8 +111,8 @@ namespace GDGame
         #endregion
 
         #region Shooter
-        public static readonly int Projectile_CooldownInMs = 2000;
-        public static readonly int Projectile_UnitMoveTimeInMs = 500;
+        public static readonly int Projectile_CooldownInMs = 4000;
+        public static readonly int Projectile_UnitMoveTimeInMs = 1500;
         public static readonly float Projectile_ActivationDistance = 15f; 
         #endregion
     }

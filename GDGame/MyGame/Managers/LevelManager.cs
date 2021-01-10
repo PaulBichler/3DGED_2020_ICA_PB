@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using GDLibrary.Actors;
+using GDLibrary.Enums;
+using GDLibrary.Events;
 using GDLibrary.Managers;
 using GDLibrary.Parameters;
 using GDLibrary.Utilities;
@@ -69,6 +71,7 @@ namespace GDGame.MyGame.Managers
         {
             // clear the scene and draw the skybox and ground
             objectManager.Clear();
+            EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnReset, null));
             main.InitSkybox(1000);
             main.InitGround(1000);
 

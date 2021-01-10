@@ -1074,7 +1074,7 @@ namespace GDGame
 
             #region Moving Obstacle
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    new Vector3(.9f, .9f, .9f), Vector3.UnitZ, Vector3.UnitY);
+                    new Vector3(.8f, .8f, .8f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
                 textureDictionary["White"], Color.White, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedPyramid(out primitiveType, out primitiveCount);
@@ -1122,11 +1122,11 @@ namespace GDGame
 
             #region Projectile
             transform3D = new Transform3D(Vector3.Zero, new Vector3(90, 0, 0), 
-                    Vector3.One / 2, Vector3.UnitZ, Vector3.UnitY);
+                    Vector3.One / 4, Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
-            vertices = VertexFactory.GetVerticesPositionNormalTexturedPyramid(out primitiveType, out primitiveCount);
-            vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
+                textureDictionary["White"], Color.Red, 1);
+            vertices = VertexFactory.GetVerticesPositionNormalTexturedCube(1, out primitiveType, out primitiveCount);
+            vertexData = new BufferedVertexData<VertexPositionNormalTexture>(GraphicsDevice, vertices, primitiveType, primitiveCount);
             CollidableProjectile projectile = new CollidableProjectile(
                 "Projectile",
                 ActorType.Projectile, StatusType.Drawn | StatusType.Update,
@@ -1138,9 +1138,9 @@ namespace GDGame
 
             #region Shooter
             transform3D = new Transform3D(Vector3.Zero, Vector3.Zero,
-                    Vector3.One, Vector3.UnitZ, Vector3.UnitY);
+                    new Vector3(.8f, .8f, .8f), Vector3.UnitZ, Vector3.UnitY);
             effectParameters = new EffectParameters(effectDictionary[GameConstants.Effect_LitTextured],
-                textureDictionary["checkerboard"], Color.White, 1);
+                textureDictionary["White"], Color.Black, 1);
             vertices = VertexFactory.GetVerticesPositionNormalTexturedOctahedron(out primitiveType, out primitiveCount);
             vertexData = new VertexData<VertexPositionNormalTexture>(vertices, primitiveType, primitiveCount);
             collidable = new CollidablePrimitiveObject(

@@ -1,4 +1,5 @@
-﻿using GDLibrary.Actors;
+﻿using GDGame.MyGame.Utilities;
+using GDLibrary.Actors;
 using GDLibrary.Enums;
 using GDLibrary.Events;
 using GDLibrary.Interfaces;
@@ -28,11 +29,6 @@ namespace GDLibrary
             {
                 EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveActor, new[] { this }));
                 EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new[] { this }));
-                //EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnAdd, new[]
-                //{
-                //    new ScaleTween(this, 100, Vector3.Zero, false,
-                //        actor3D => EventDispatcher.Publish(new EventData(EventCategoryType.Object, EventActionType.OnRemoveActor, new []{ this })))
-                //}));
             }
         }
 

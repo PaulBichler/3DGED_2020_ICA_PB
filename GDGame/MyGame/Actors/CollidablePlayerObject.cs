@@ -105,14 +105,16 @@ namespace GDLibrary
         {
             if (!isMoving && moveDir != Vector3.Zero)
             {
+                //check if the player's path is blocked
                 Actor obstacleCheck = CheckCollisionAfterTranslation(moveDir);
-                if (obstacleCheck != null && obstacleCheck.ActorType == ActorType.BlockingObstacle)
+                if (obstacleCheck != null && (obstacleCheck.ActorType == ActorType.BlockingObstacle || obstacleCheck.ActorType == ActorType.Shooter))
                     return;
 
                 //we are currently on a water platform --> detach from it 
                 if (ground != null && ground.ActorType == ActorType.WaterPlatform)
                     EventDispatcher.Publish(new EventData(EventCategoryType.Tween, EventActionType.OnRemoveChild, new[] {ground as Actor3D, this}));
 
+                //Jump Animation
                 TranslationTween jumpDown = new TranslationTween(this, GameConstants.Player_MovementTimeInMs / 2, 
                     moveDir / 2 - Vector3.Up, true, 
                     MovementCallback, LoopType.PlayOnce, EasingType.easeOut);

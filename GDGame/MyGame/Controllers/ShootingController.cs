@@ -50,7 +50,7 @@ namespace GDGame.MyGame.Controllers
                 new RotationTween(parent, GameConstants.Projectile_CooldownInMs,
                     new Vector3(0, 45, 0), true, LaunchProjectiles, LoopType.Repeat),
                 new ScaleTween(parent, GameConstants.Projectile_CooldownInMs / 2,
-                    Vector3.One * 1.5f, false, null, LoopType.ReverseAndRepeat)
+                    Vector3.One * 1.2f, false, null, LoopType.ReverseAndRepeat)
             }));
         }
 
@@ -66,6 +66,7 @@ namespace GDGame.MyGame.Controllers
             {
                 CollidableProjectile projectile = projectileArchetype.Clone() as CollidableProjectile;
                 projectile.Transform3D.Translation = parentTransform.Translation;
+                projectile.EffectParameters.DiffuseColor = Color.Red;
 
                 //Rotate the direction 
                 launchDirections[i] = Vector3.Transform(launchDirections[i], Quaternion.CreateFromAxisAngle(Vector3.Up, 45));
@@ -102,7 +103,7 @@ namespace GDGame.MyGame.Controllers
         private void HandleGameStateEvent(EventData eventData)
         {
             if (eventData.EventActionType == EventActionType.OnSpawn)
-                playerTransform = eventData.Parameters[0] as Transform3D;
+                playerTransform = (eventData.Parameters[0] as Actor3D).Transform3D;
         } 
         #endregion
     }

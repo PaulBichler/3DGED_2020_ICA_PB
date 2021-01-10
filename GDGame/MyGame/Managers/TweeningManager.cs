@@ -115,6 +115,9 @@ namespace GDGame.MyGame.Managers
                     case EventActionType.OnRemoveActor:
                         RemoveActorTweens(eventData.Parameters[0] as Actor3D);
                         break;
+                    case EventActionType.OnReset:
+                        Dispose();
+                        break;
                 }
             }
             else if (eventData.EventCategoryType == EventCategoryType.Object)
